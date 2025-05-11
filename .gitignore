@@ -1,0 +1,52 @@
+# Keil uVision5 - ignore build outputs and user-specific files
+
+# Output binaries
+*.axf
+*.hex
+*.bin
+*.elf
+*.out
+
+# Object files
+*.o
+*.obj
+*.crf
+*.d
+*.lst
+*.map
+*.lnp
+*.sbr
+
+# Debug and IDE-specific files
+*.uvoptx
+*.uvguix.*
+*.bak
+*.dep
+*.plg
+*.htm
+*.tra
+*.log
+*.tmp
+*.aps
+*.iex
+
+# Keil output folders
+Objects/
+Listings/
+
+# Optional: Ignore STM32CubeMX or other auto-generated backup files
+MX_*/  # Example, adjust based on your setup
+*.ioc-backup
+
+# Ignore temporary files from OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Ignore specific file
+其他项目/
+零部件资料/弃用/
+旧资料/
+旧_中型AUV模型/
+文件资料/旧框图/
+文件资料/旧通讯协议/
