@@ -19,6 +19,7 @@ rt_thread_t PowerSysThread_t = RT_NULL;
 rt_thread_t TestThread_t = RT_NULL;
 rt_thread_t AutoModeThread_t = RT_NULL;
 rt_thread_t HandleModeThread_t = RT_NULL;
+rt_thread_t AD4111Thread_t = RT_NULL;
 
 /* 信号量句柄 */
 rt_sem_t CmdFromIPC_Sem = RT_NULL;			//上位机命令信号量
@@ -52,8 +53,10 @@ void UserLogic_Code(void)
 	TestThread_t		= rt_thread_create("TestThread",TestThread,NULL,512,3,20);
 	AutoModeThread_t	= rt_thread_create("AutoModeThread",AutoModeThread,NULL,512,11,20);
 	HandleModeThread_t  = rt_thread_create("HandleModeThread",HandleModeThread,NULL,512,11,20);
+	AD4111Thread_t 		= rt_thread_create("AD4111Thread",AD4111Thread,NULL,512,6,20);
+	
 	/*启动线程*/
-	rt_thread_startup(ReportDataThread_t);		//报告数据线程
+	//rt_thread_startup(ReportDataThread_t);		//报告数据线程
 	rt_thread_startup(IPCcmdThread_t);			//上位机命令线程
 	rt_thread_startup(AltimeterThread_t);		//高度计线程
 	rt_thread_startup(MotorSysThread_t);		//动力线程
@@ -62,10 +65,10 @@ void UserLogic_Code(void)
 	rt_thread_startup(JY901Thread_t);			//JY901线程
 	rt_thread_startup(TDmeterThread_t);			//温深仪线程
 	rt_thread_startup(PowerSysThread_t);		//电源系统仪线程
-	rt_thread_startup(TestThread_t);			//测试线程
+	//rt_thread_startup(TestThread_t);			//测试线程
 	rt_thread_startup(AutoModeThread_t);		//自动线程
 	rt_thread_startup(HandleModeThread_t);		//手动线程
-
+	rt_thread_startup(AD4111Thread_t);			//磁力仪采集线程
 }
 
 /*公用函数*/

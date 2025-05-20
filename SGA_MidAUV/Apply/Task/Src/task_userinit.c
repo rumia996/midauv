@@ -5,6 +5,8 @@
 /* 外设初始化函数 */
 void Task_UserInit(void)
 {
+	uint8_t ret = 0;
+	Drv_GPIO_Init(&SYNC,1);			/* 初始化AD4111的SYNC引脚 */
 	
 	Drv_GPIO_Init(Control_GPIO, 9);
 	Drv_GPIO_Init (RS485Ctrl,1);
@@ -20,14 +22,28 @@ void Task_UserInit(void)
 	
 	Drv_PWM_Init(PWM,12);
 	Task_MotorSys_Init();//4秒
-	
 	CRC_Init();
 	
-	Power_Test();	
+	//Power_Test();
+	Power_AllOn();
 	TDmeter_Init();
 	
-	Drv_IWDG_Init(&demoIWDG);
+	
 	//Power_AllOff();
 	
+	ret = OCD_AD24BIT_Init(&AD4111_1);  /* 24位AD初始化 */
+	if (ret != 0)
+	{
+		printf("##AD init fail, error code:%d!!!\r\n",ret);
+		while(1);  //程序报错stop	
+	}
+    ret = OCD_AD24BIT_Init(&AD4111_2);  /* 24位AD初始化 */
+	if (ret != 0)
+	{
+		printf("##AD init fail, error code:%d!!!\r\n",ret);
+		while(1);  //程序报错stop	
+	}
+	
+	Drv_IWDG_Init(&demoIWDG);//看门狗放最后初始化
 }
 

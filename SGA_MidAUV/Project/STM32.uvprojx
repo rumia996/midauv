@@ -489,6 +489,16 @@
               <FileType>5</FileType>
               <FilePath>..\Apply\Task\Inc\task_handlemode.h</FilePath>
             </File>
+            <File>
+              <FileName>task_ad4111.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Apply\Task\Src\task_ad4111.c</FilePath>
+            </File>
+            <File>
+              <FileName>task_ad4111.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Apply\Task\Inc\task_ad4111.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -538,6 +548,16 @@
               <FileName>ocd_sdcard.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Bsp\OCD\Src\ocd_sdcard.c</FilePath>
+            </File>
+            <File>
+              <FileName>ocd_ad24bit-1K_SYNC.lib</FileName>
+              <FileType>4</FileType>
+              <FilePath>..\Bsp\OCD\Src\ocd_ad24bit-1K_SYNC.lib</FilePath>
+            </File>
+            <File>
+              <FileName>ocd_ad24bit.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Bsp\OCD\Inc\ocd_ad24bit.h</FilePath>
             </File>
           </Files>
         </Group>

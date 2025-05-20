@@ -18,5 +18,6 @@
 #include "task_test.h"
 #include "task_automode.h"
 #include "task_handlemode.h"
+#include "task_ad4111.h"
 
 #endif

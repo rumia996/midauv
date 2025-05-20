@@ -50,6 +50,10 @@ extern uint8_t MODE;	//当前模式
 /* 用户句柄声明包含区 */
 extern tagGPIO_T RS485Ctrl[];
 extern tagGPIO_T Control_GPIO[];
+extern tagGPIO_T SYNC;
+
+extern tagAD24BIT_T AD4111_1;
+extern tagAD24BIT_T AD4111_2;
 
 extern tagUART_T Uart1;
 extern tagUART_T Uart2;

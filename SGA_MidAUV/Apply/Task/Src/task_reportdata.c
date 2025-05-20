@@ -11,41 +11,40 @@ void Task_ReportData_Handle(void)
 	ReportDataBuffer[FRAMEEND_BASE]='$';
     /*填充字符串,需放到各个驱动文件中*/
 	
-//	uint16_t Yaw = 123;
-//	uint16_t Pitch = 456;
-//	uint16_t Roll = 789;
-//	memcpy(&ReportDataBuffer[RPY_ATTITUED_BASE 						],&Yaw,UINT16_T_SIZE);
-//	memcpy(&ReportDataBuffer[RPY_ATTITUED_BASE + 1 * UINT16_T_SIZE	],&Pitch,UINT16_T_SIZE);
-//	memcpy(&ReportDataBuffer[RPY_ATTITUED_BASE + 2 * UINT16_T_SIZE	],&Roll,UINT16_T_SIZE);
+//	float Roll = 123;
+//	float Pitch = 456;
+//	float Yaw = 789;
+//	memcpy(&ReportDataBuffer[RPY_ATTITUED_BASE 					],&Roll,FLOAT_SIZE);//滚转角Roll
+//	memcpy(&ReportDataBuffer[RPY_ATTITUED_BASE + 1 * FLOAT_SIZE	],&Pitch,FLOAT_SIZE);	//俯仰角Pitch
+//	memcpy(&ReportDataBuffer[RPY_ATTITUED_BASE + 2 * FLOAT_SIZE	],&Yaw,FLOAT_SIZE); 	//航向角Yaw		
+//	
+//	float Temperature= 123;
+//	float Depth = 456;
+//	float Height = 789;
+//	memcpy(&ReportDataBuffer[TEMPERATURE_BASE],&Temperature,FLOAT_SIZE);
+//	memcpy(&ReportDataBuffer[DEPTH_BASE],&Depth,FLOAT_SIZE);
+//	memcpy(&ReportDataBuffer[HEIGHT_BASE],&Height,FLOAT_SIZE);
 	
-	
-//	uint16_t Temperature= 123;
-//	uint16_t Depth = 456;
-//	uint16_t Height = 789;
-//	memcpy(&ReportDataBuffer[TEMPERATURE_BASE],&Temperature,UINT16_T_SIZE);
-//	memcpy(&ReportDataBuffer[DEPTH_BASE],&Depth,UINT16_T_SIZE);
-//	memcpy(&ReportDataBuffer[HEIGHT_BASE],&Height,UINT16_T_SIZE);
-	
-	float frontmagnet_x = 1234.5678;
-	float frontmagnet_y = 1234.5678;
-	float frontmagnet_z = 1234.5678;
-	memcpy(&ReportDataBuffer[FRONT_MAGNET_XYZ_BASE					],&frontmagnet_x,FLOAT_SIZE);
-	memcpy(&ReportDataBuffer[FRONT_MAGNET_XYZ_BASE + 1 * FLOAT_SIZE	],&frontmagnet_y,FLOAT_SIZE);
-	memcpy(&ReportDataBuffer[FRONT_MAGNET_XYZ_BASE + 2 * FLOAT_SIZE	],&frontmagnet_z,FLOAT_SIZE);
+//	float gradientmagnet_front_x = 1234.5678;
+//	float gradientmagnet_front_y = 1234.5678;
+//	float gradientmagnet_front_z = 1234.5678;
+//	memcpy(&ReportDataBuffer[GRADIENTMAGNET_FRONT_BASE				],&gradientmagnet_front_x,FLOAT_SIZE);
+//	memcpy(&ReportDataBuffer[GRADIENTMAGNET_FRONT_BASE + 1 * FLOAT_SIZE	],&gradientmagnet_front_y,FLOAT_SIZE);
+//	memcpy(&ReportDataBuffer[GRADIENTMAGNET_FRONT_BASE + 2 * FLOAT_SIZE	],&gradientmagnet_front_z,FLOAT_SIZE);
 
-	float gradientmagnet_left_x = 1234.5678;
-	float gradientmagnet_left_y = 1234.5678;
-	float gradientmagnet_left_z = 1234.5678;
-	memcpy(&ReportDataBuffer[GRADIENTMAGNET_LEFT_BASE 					],&gradientmagnet_left_x,FLOAT_SIZE);
-	memcpy(&ReportDataBuffer[GRADIENTMAGNET_LEFT_BASE + 1 * FLOAT_SIZE	],&gradientmagnet_left_y,FLOAT_SIZE);
-	memcpy(&ReportDataBuffer[GRADIENTMAGNET_LEFT_BASE + 2 * FLOAT_SIZE	],&gradientmagnet_left_z,FLOAT_SIZE);
-	
-	float gradientmagnet_right_x = 1234.5678;
-	float gradientmagnet_right_y = 1234.5678;
-	float gradientmagnet_right_z = 1234.5678;
-	memcpy(&ReportDataBuffer[GRADIENTMAGNET_RIGHT_BASE 					],&gradientmagnet_right_x,FLOAT_SIZE);
-	memcpy(&ReportDataBuffer[GRADIENTMAGNET_RIGHT_BASE + 1 * FLOAT_SIZE	],&gradientmagnet_right_y,FLOAT_SIZE);
-	memcpy(&ReportDataBuffer[GRADIENTMAGNET_RIGHT_BASE + 2 * FLOAT_SIZE	],&gradientmagnet_right_z,FLOAT_SIZE);
+//	float gradientmagnet_left_x = 1234.5678;
+//	float gradientmagnet_left_y = 1234.5678;
+//	float gradientmagnet_left_z = 1234.5678;
+//	memcpy(&ReportDataBuffer[GRADIENTMAGNET_LEFT_BASE 					],&gradientmagnet_left_x,FLOAT_SIZE);
+//	memcpy(&ReportDataBuffer[GRADIENTMAGNET_LEFT_BASE + 1 * FLOAT_SIZE	],&gradientmagnet_left_y,FLOAT_SIZE);
+//	memcpy(&ReportDataBuffer[GRADIENTMAGNET_LEFT_BASE + 2 * FLOAT_SIZE	],&gradientmagnet_left_z,FLOAT_SIZE);
+//	
+//	float gradientmagnet_right_x = 1234.5678;
+//	float gradientmagnet_right_y = 1234.5678;
+//	float gradientmagnet_right_z = 1234.5678;
+//	memcpy(&ReportDataBuffer[GRADIENTMAGNET_RIGHT_BASE 					],&gradientmagnet_right_x,FLOAT_SIZE);
+//	memcpy(&ReportDataBuffer[GRADIENTMAGNET_RIGHT_BASE + 1 * FLOAT_SIZE	],&gradientmagnet_right_y,FLOAT_SIZE);
+//	memcpy(&ReportDataBuffer[GRADIENTMAGNET_RIGHT_BASE + 2 * FLOAT_SIZE	],&gradientmagnet_right_z,FLOAT_SIZE);
 	
 	uint16_t battery_control = 12;
 	uint16_t battery_power = 48;
@@ -60,6 +59,7 @@ void Task_ReportData_Handle(void)
 		/*各传感器数据在各自线程中更新,此处应执行没有独立线程的数据更新*/
 		PWM_update();
 		CRC_update();
+		
 		for (int i = 0;i < sizeof(ReportDataBuffer); i++){//逐字节输出,不输出末尾/0
 			printf("%c",ReportDataBuffer[i]);
 		}

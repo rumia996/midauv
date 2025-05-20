@@ -115,7 +115,7 @@ void AutoModeThread(void* pramenter)
 	{
 		if (MODE == AUTO_MODE)
 		{
-			Task_AutoMode_Process(&AMInfo);		
+			Task_AutoMode_Process(&AMInfo);
 		}
 		else
 		{
@@ -133,4 +133,15 @@ void HandleModeThread(void* pramenter)
 		Task_HandleMode_Process();		
 		Drv_Delay_Ms(1); 
 	}
+}
+
+/*AD4111Ïß³Ì*/
+void AD4111Thread(void* paramenter)
+{
+    Task_AD4111_Sync();
+    while(1)
+    {
+        Task_AD4111_Handle();
+        Drv_Delay_Ms(500);
+    }
 }

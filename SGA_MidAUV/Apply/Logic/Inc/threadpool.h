@@ -15,5 +15,6 @@ void PowerSysThread(void* pramenter);
 void TestThread(void* pramenter);
 void AutoModeThread(void* pramenter);
 void HandleModeThread(void* pramenter);
+void AD4111Thread(void* pramenter);
 
 #endif

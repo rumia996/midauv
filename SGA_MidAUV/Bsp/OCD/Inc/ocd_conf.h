@@ -5,6 +5,7 @@
 
 /* OCD层头文件包含区 */
 #include "ocd_jy901.h"
+#include "ocd_ad24bit.h"
 
 #endif
 
