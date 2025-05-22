@@ -114,7 +114,7 @@ void Power_CommunicationOff()
 */
 void Power_Test()
 {
-	Power_Off(POW_MAG);
+	Power_On(POW_MAG);
 	Power_On(POW_TDM);
 	Power_On(POW_HEIGHT);
 	Power_On(POW_BDGPS);
@@ -155,31 +155,20 @@ uint8_t Power_GetState()
 
 void Task_PowerSys_Handle()
 {
-	switch (MODE)
-	{
-		case TEST_MODE:break;//do nothing
-		//case SLEEP_MODE:Power_AllOff();break;
-		case AUTO_MODE:break;
-		case MANUAL_MODE:break;
-	}
-	
-	//Power_On(POW_BDGPS);
-	//Power_AllOff();
-	
-	/*深度小于2m且声通机为开启状态，自动关闭声通机电源*/
-	if(Height < 2 && !Drv_GPIO_Read(&Control_GPIO[POW_UACM]))
+
+	/*深度小于1m且声通机为开启状态，自动关闭声通机电源*/
+	if(*p_height < 1 && !Drv_GPIO_Read(&Control_GPIO[POW_UACM]))
 	{
 		/*每100ms counter+1 计时3秒后关闭*/
 		counter+=1;
 		//printf("counter=%d\r\n",counter);
 		if(counter>= 30)
-		{			{
-//			counter = 0;
-//			Power_Off(POW_UACM);
-//			#ifdef DEBUG_MODE
-//			printf("声通机已关闭\r\n");
-//			#endif
-	}
+		{			
+			counter = 0;
+			Power_Off(POW_UACM);
+			#ifdef DEBUG_MODE
+			printf("当前深度:%.3f 声通机已关闭\r\n",*p_height);
+			#endif
 		}
 	}
 

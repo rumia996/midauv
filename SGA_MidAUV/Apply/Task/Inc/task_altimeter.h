@@ -8,6 +8,6 @@
 
 void Task_Altimeter_Handle(void);
 
-extern float Height;
+//extern float Height;
 	
 #endif

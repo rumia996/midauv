@@ -1,6 +1,6 @@
 #include "config.h"
 
-uint8_t MODE = TEST_MODE;//设置默认模式
+uint8_t MODE = DEFAULT_MODE;//设置默认模式
 
 /* 独立看门狗 */
 tagIWDG_T demoIWDG = 

@@ -1,78 +1,79 @@
 #include "task_reportdata.h"
 #include "config.h"
-uint8_t ReportDataBuffer[FRAMEEND_BASE + 1 ]={0};	//存储回报字符串,+1是为了字符串末尾的\0,数据帧长70字节,字符串总长70+1字节
+#include "task_conf.h"
+uint8_t ReportDataBuffer[FRAMEEND_BASE + 1 ]={0};	//存储回报字符串,+1是为了字符串末尾的\0,数据帧长86字节,字符串总长86+1字节
+float* p_roll = &ReportDataBuffer[RPY_ATTITUED_BASE					 ];
+float* p_pitch = &ReportDataBuffer[RPY_ATTITUED_BASE + 1 * FLOAT_SIZE];
+float* p_yaw = &ReportDataBuffer[RPY_ATTITUED_BASE + 2 * FLOAT_SIZE];
+float* p_temperature = &ReportDataBuffer[TEMPERATURE_BASE];
+float* p_depth = &ReportDataBuffer[DEPTH_BASE];
+float* p_height = &ReportDataBuffer[HEIGHT_BASE];
+float* p_gradientmagnet_front_x = &ReportDataBuffer[GRADIENTMAGNET_FRONT_BASE				  ];
+float* p_gradientmagnet_front_y = &ReportDataBuffer[GRADIENTMAGNET_FRONT_BASE + 1 * FLOAT_SIZE];
+float* p_gradientmagnet_front_z = &ReportDataBuffer[GRADIENTMAGNET_FRONT_BASE + 2 * FLOAT_SIZE];
+float* p_gradientmagnet_left_x = &ReportDataBuffer[GRADIENTMAGNET_LEFT_BASE					];
+float* p_gradientmagnet_left_y = &ReportDataBuffer[GRADIENTMAGNET_LEFT_BASE + 1 * FLOAT_SIZE];
+float* p_gradientmagnet_left_z = &ReportDataBuffer[GRADIENTMAGNET_LEFT_BASE + 2 * FLOAT_SIZE];
+float* p_gradientmagnet_right_x = &ReportDataBuffer[GRADIENTMAGNET_RIGHT_BASE				  ];
+float* p_gradientmagnet_right_y = &ReportDataBuffer[GRADIENTMAGNET_RIGHT_BASE + 1 * FLOAT_SIZE];
+float* p_gradientmagnet_right_z = &ReportDataBuffer[GRADIENTMAGNET_RIGHT_BASE + 2 * FLOAT_SIZE];
+uint16_t* p_pwm_lmt = &ReportDataBuffer[PWM_BASE 						];
+uint16_t* p_pwm_rmt = &ReportDataBuffer[PWM_BASE + 1 * UINT16_T_SIZE	];
+uint16_t* p_pwm_bvt = &ReportDataBuffer[PWM_BASE + 2 * UINT16_T_SIZE	];
+uint16_t* p_pwm_lvt = &ReportDataBuffer[PWM_BASE + 3 * UINT16_T_SIZE	];
+uint16_t* p_pwm_rvt = &ReportDataBuffer[PWM_BASE + 4 * UINT16_T_SIZE	];
+uint16_t* p_pwm_ls = &ReportDataBuffer[PWM_BASE + 5 * UINT16_T_SIZE	];
+uint16_t* p_pwm_rs = &ReportDataBuffer[PWM_BASE + 6 * UINT16_T_SIZE	];
+uint16_t* p_battery_control = &ReportDataBuffer[BATTARY_BASE				];
+uint16_t* p_battery_power = &ReportDataBuffer[BATTARY_BASE + UINT16_T_SIZE	];
 
 void Task_ReportData_Handle(void)
 {
+	ReportDataBuffer_Reset();
+	
+	//更新数据&输出回报
+    while(1)
+    {
+		/*各传感器数据在各自线程中更新,此处应执行没有独立线程的数据更新*/
+		PWM_update();
+		CRC_update();
+		//逐字节输出,不输出末尾/0
+		for (int i = 0;i < sizeof(ReportDataBuffer); i++){
+			printf("%c",ReportDataBuffer[i]);
+		}
+#ifdef DEBUG_MODE 
+		printf("\r\n");
+		//明文输出
+	
+		printf("横滚:%.3f 俯仰:%.3f 航向:%.3f\r\n",*p_roll,*p_pitch,*p_yaw);
+		printf("温度:%.3f 深度:%.3f 高度:%.3f\r\n",*p_temperature,*p_depth,*p_height);	
+		printf("前磁X:%.2f 前磁Y:%.2f 前磁Z:%.2f\r\n",*p_gradientmagnet_front_x,*p_gradientmagnet_front_y,*p_gradientmagnet_front_z);
+		printf("左磁X:%.2f 左磁Y:%.2f 左磁Z:%.2f\r\n",*p_gradientmagnet_left_x,*p_gradientmagnet_left_y,*p_gradientmagnet_left_z);
+		printf("右磁X:%.2f 右磁Y:%.2f 右磁Z:%.2f\r\n",*p_gradientmagnet_right_x,*p_gradientmagnet_right_y,*p_gradientmagnet_right_z);
+		printf("左主推:%d 右主推:%d 后垂推:%d 左垂推:%d 右垂推:%d 左舵机:%d 右舵机:%d\r\n",*p_pwm_lmt,*p_pwm_rmt,*p_pwm_bvt,*p_pwm_lvt,*p_pwm_rvt,*p_pwm_ls,*p_pwm_rs);
+		printf("舱内电池:%d 舱外电池:%d\r\n",*p_battery_control,*p_battery_power);
+#endif
+		//printf("%s\r\n",ReportDataBuffer);//直接输出字符串会在碰到00时中断输出,别用	
+		Drv_Delay_Ms(2000);//发送周期2秒
+    }
+}
+
+/*清空并初始化buffer*/
+void ReportDataBuffer_Reset()
+{
+	/*清空数据*/
+	memset(ReportDataBuffer,0,sizeof(ReportDataBuffer));
 	/*帧头帧尾*/
 	ReportDataBuffer[FRAMESTART_BASE]='@';
 	ReportDataBuffer[FRAMESTART_BASE + 1]='S';
 	ReportDataBuffer[FRAMESTART_BASE + 2]='D';
 	ReportDataBuffer[FRAMEEND_BASE]='$';
-    /*填充字符串,需放到各个驱动文件中*/
-	
-//	float Roll = 123;
-//	float Pitch = 456;
-//	float Yaw = 789;
-//	memcpy(&ReportDataBuffer[RPY_ATTITUED_BASE 					],&Roll,FLOAT_SIZE);//滚转角Roll
-//	memcpy(&ReportDataBuffer[RPY_ATTITUED_BASE + 1 * FLOAT_SIZE	],&Pitch,FLOAT_SIZE);	//俯仰角Pitch
-//	memcpy(&ReportDataBuffer[RPY_ATTITUED_BASE + 2 * FLOAT_SIZE	],&Yaw,FLOAT_SIZE); 	//航向角Yaw		
-//	
-//	float Temperature= 123;
-//	float Depth = 456;
-//	float Height = 789;
-//	memcpy(&ReportDataBuffer[TEMPERATURE_BASE],&Temperature,FLOAT_SIZE);
-//	memcpy(&ReportDataBuffer[DEPTH_BASE],&Depth,FLOAT_SIZE);
-//	memcpy(&ReportDataBuffer[HEIGHT_BASE],&Height,FLOAT_SIZE);
-	
-//	float gradientmagnet_front_x = 1234.5678;
-//	float gradientmagnet_front_y = 1234.5678;
-//	float gradientmagnet_front_z = 1234.5678;
-//	memcpy(&ReportDataBuffer[GRADIENTMAGNET_FRONT_BASE				],&gradientmagnet_front_x,FLOAT_SIZE);
-//	memcpy(&ReportDataBuffer[GRADIENTMAGNET_FRONT_BASE + 1 * FLOAT_SIZE	],&gradientmagnet_front_y,FLOAT_SIZE);
-//	memcpy(&ReportDataBuffer[GRADIENTMAGNET_FRONT_BASE + 2 * FLOAT_SIZE	],&gradientmagnet_front_z,FLOAT_SIZE);
-
-//	float gradientmagnet_left_x = 1234.5678;
-//	float gradientmagnet_left_y = 1234.5678;
-//	float gradientmagnet_left_z = 1234.5678;
-//	memcpy(&ReportDataBuffer[GRADIENTMAGNET_LEFT_BASE 					],&gradientmagnet_left_x,FLOAT_SIZE);
-//	memcpy(&ReportDataBuffer[GRADIENTMAGNET_LEFT_BASE + 1 * FLOAT_SIZE	],&gradientmagnet_left_y,FLOAT_SIZE);
-//	memcpy(&ReportDataBuffer[GRADIENTMAGNET_LEFT_BASE + 2 * FLOAT_SIZE	],&gradientmagnet_left_z,FLOAT_SIZE);
-//	
-//	float gradientmagnet_right_x = 1234.5678;
-//	float gradientmagnet_right_y = 1234.5678;
-//	float gradientmagnet_right_z = 1234.5678;
-//	memcpy(&ReportDataBuffer[GRADIENTMAGNET_RIGHT_BASE 					],&gradientmagnet_right_x,FLOAT_SIZE);
-//	memcpy(&ReportDataBuffer[GRADIENTMAGNET_RIGHT_BASE + 1 * FLOAT_SIZE	],&gradientmagnet_right_y,FLOAT_SIZE);
-//	memcpy(&ReportDataBuffer[GRADIENTMAGNET_RIGHT_BASE + 2 * FLOAT_SIZE	],&gradientmagnet_right_z,FLOAT_SIZE);
-	
+	//电池电量未实装
 	uint16_t battery_control = 12;
 	uint16_t battery_power = 48;
 	memcpy(&ReportDataBuffer[BATTARY_BASE					],&battery_control,UINT16_T_SIZE);
 	memcpy(&ReportDataBuffer[BATTARY_BASE + UINT16_T_SIZE	],&battery_power,UINT16_T_SIZE);
-	
-	
-	//更新数据&输出回报
-    while(1)
-    {
-		//printf("test\r\n");
-		/*各传感器数据在各自线程中更新,此处应执行没有独立线程的数据更新*/
-		PWM_update();
-		CRC_update();
-		
-		for (int i = 0;i < sizeof(ReportDataBuffer); i++){//逐字节输出,不输出末尾/0
-			printf("%c",ReportDataBuffer[i]);
-		}
-#ifdef DEBUG_MODE 
-		//printf("\r\n");
-#endif
-		//printf("%s\r\n",ReportDataBuffer);//会在碰到00时中断输出,别用
-		//printf("%d\r\n",FRAMEEND_BASE + 1);
-        //Drv_Delay_Ms(2000);//发送周期2秒
-		Drv_Delay_Ms(2000);
-    }
 }
-
 
 /*计算CRC32(以太网)并存储,此函数应当在所有数据更新后执行*/
 void CRC_update()

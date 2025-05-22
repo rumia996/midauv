@@ -460,19 +460,19 @@ bool Task_MotorSys_LeanRight(uint8_t speed)
 bool Task_MotorSys_SetDepth(float target_depth)
 {
 	/*距离预定深度2m以上，全速下潜*/
-	if (target_depth - Depth >= 2)
+	if (target_depth - *p_depth >= 2)
 	{
 		return	Task_MotorSys_Dive(10);		
 	}
-	else if(target_depth - Depth > 1)		/*2m~1m，半速下潜*/
+	else if(target_depth - *p_depth > 1)		/*2m~1m，半速下潜*/
 	{
 		return  Task_MotorSys_Dive(8);		
 	}
-	else if (target_depth - Depth > 0.5)	/*1m~0.5m，低速下潜*/
+	else if (target_depth - *p_depth > 0.5)	/*1m~0.5m，低速下潜*/
 	{
 		return  Task_MotorSys_Dive(6);
 	}
-	else if (target_depth - Depth <= 0.5 || target_depth - Depth >= -0.5)	/*0.5m~-0.5m，缓慢下潜,尝试维持深度*/
+	else if (target_depth - *p_depth <= 0.5 || target_depth - *p_depth >= -0.5)	/*0.5m~-0.5m，缓慢下潜,尝试维持深度*/
 	{
 		return  Task_MotorSys_Dive(5);	
 	}
@@ -490,19 +490,19 @@ bool Task_MotorSys_SetDepth(float target_depth)
 bool Task_MotorSys_SetHeight(float target_height)
 {
 	/*距离预定高度2m以上，全速下潜*/
-	if (Height - target_height >= 2)
+	if (*p_height - target_height >= 2)
 	{
 		return	Task_MotorSys_Dive(10);		
 	}
-	else if(Height - target_height >= 1)	/*2m~1m，半速下潜*/
+	else if(*p_height - target_height >= 1)	/*2m~1m，半速下潜*/
 	{
 		return  Task_MotorSys_Dive(8);		
 	}
-	else if (Height - target_height >= 0.5)	/*1m~0.5m，低速下潜*/
+	else if (*p_height - target_height >= 0.5)	/*1m~0.5m，低速下潜*/
 	{
 		return  Task_MotorSys_Dive(6);
 	}
-	else if (Height - target_height <= 0.5 || Height - target_height >= -0.5)	/*0.5m~-0.5m，缓慢下潜,尝试维持高度*/
+	else if (*p_height - target_height <= 0.5 || *p_height - target_height >= -0.5)	/*0.5m~-0.5m，缓慢下潜,尝试维持高度*/
 	{
 		return  Task_MotorSys_Dive(5);	
 	}
@@ -531,25 +531,25 @@ bool Task_MotorSys_SetYaw(float target_yaw)
 {
 	/*将手柄摇杆定义的坐标系转换为传感器东北天坐标系*/
 	float cov_target_yaw = transform_angle(target_yaw);
-	if ((Yaw - cov_target_yaw >= 0)  && (Yaw - cov_target_yaw <= 180))
+	if ((*p_yaw - cov_target_yaw >= 0)  && (*p_yaw - cov_target_yaw <= 180))
 	{
 		/*右转弯*/
-		if (Yaw-cov_target_yaw > 45)
+		if (*p_yaw-cov_target_yaw > 45)
 		{
 			Task_MotorSys_TurnRight(5);
 			return false;
 		}
-		else if (Yaw-cov_target_yaw > 30)
+		else if (*p_yaw-cov_target_yaw > 30)
 		{
 			Task_MotorSys_TurnRight(5);
 			return false;
 		}
-		else if (Yaw-cov_target_yaw > 15)
+		else if (*p_yaw-cov_target_yaw > 15)
 		{
 			Task_MotorSys_TurnRight(5);
 			return false;
 		}
-		else if (Yaw-cov_target_yaw > 5)
+		else if (*p_yaw-cov_target_yaw > 5)
 		{
 			Task_MotorSys_TurnRight(5);
 			return false;
@@ -563,22 +563,22 @@ bool Task_MotorSys_SetYaw(float target_yaw)
 	else
 	{
 		/*左转弯*/
-		if (Yaw-cov_target_yaw < -45)
+		if (*p_yaw-cov_target_yaw < -45)
 		{
 			Task_MotorSys_TurnLeft(5);
 			return false;
 		}
-		else if (Yaw-cov_target_yaw < -30)
+		else if (*p_yaw-cov_target_yaw < -30)
 		{
 			Task_MotorSys_TurnLeft(5);
 			return false;
 		}
-		else if (Yaw-cov_target_yaw < -15)
+		else if (*p_yaw-cov_target_yaw < -15)
 		{
 			Task_MotorSys_TurnLeft(5);
 			return false;
 		}
-		else if (Yaw-cov_target_yaw < -5)
+		else if (*p_yaw-cov_target_yaw < -5)
 		{
 			Task_MotorSys_TurnLeft(5);
 			return false;
@@ -757,7 +757,7 @@ void Task_MotorSys_Handle(void)
 //				#ifdef DEBUG_MODE
 //				printf("退出手柄模式!进入测试模式\r\n");
 //				#endif
-//				MODE = TEST_MODE;
+//				MODE = DEFAULT_MODE;
 //				Task_MotorSys_AllThruster_Stop();
 //				Task_MotorSys_AllSteer_0Angle();				
 //			}

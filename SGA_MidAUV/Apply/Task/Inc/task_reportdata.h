@@ -30,6 +30,31 @@
 
 extern uint8_t ReportDataBuffer[FRAMEEND_BASE + 1];
 
-void Task_ReportData_Handle(void);
+extern float* p_roll;
+extern float* p_pitch;
+extern float* p_yaw;
+extern float* p_temperature;
+extern float* p_depth;
+extern float* p_height;
+extern float* p_gradientmagnet_front_x;
+extern float* p_gradientmagnet_front_y;
+extern float* p_gradientmagnet_front_z;
+extern float* p_gradientmagnet_left_x;
+extern float* p_gradientmagnet_left_y;
+extern float* p_gradientmagnet_left_z;
+extern float* p_gradientmagnet_right_x;
+extern float* p_gradientmagnet_right_y;
+extern float* p_gradientmagnet_right_z;
+extern uint16_t* p_pwm_lmt;
+extern uint16_t* p_pwm_rmt;
+extern uint16_t* p_pwm_bvt;
+extern uint16_t* p_pwm_lvt;
+extern uint16_t* p_pwm_rvt;
+extern uint16_t* p_pwm_ls;
+extern uint16_t* p_pwm_rs;
+extern uint16_t* p_battery_control;
+extern uint16_t* p_battery_power;
 
+void Task_ReportData_Handle(void);
+void ReportDataBuffer_Reset(void);
 #endif // !__TASK_REPORTDATA_H__

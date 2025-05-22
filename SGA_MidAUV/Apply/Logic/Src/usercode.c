@@ -56,7 +56,7 @@ void UserLogic_Code(void)
 	AD4111Thread_t 		= rt_thread_create("AD4111Thread",AD4111Thread,NULL,512,6,20);
 	
 	/*启动线程*/
-	//rt_thread_startup(ReportDataThread_t);		//报告数据线程
+	rt_thread_startup(ReportDataThread_t);		//报告数据线程
 	rt_thread_startup(IPCcmdThread_t);			//上位机命令线程
 	rt_thread_startup(AltimeterThread_t);		//高度计线程
 	rt_thread_startup(MotorSysThread_t);		//动力线程
@@ -141,8 +141,70 @@ void RS485_Receive_On()
 	Drv_Delay_Ms(1);
 }
 
+/**
+ * @brief 模式切换 切换到不同模式时触发一次停止
+ * @param tartget_MODE 要切换到的模式
+ * @retval 成功切换返回true,失败返回false
+*/
+bool MODE_Switch(uint8_t target_MODE)
+{
+	if(target_MODE != DEFAULT_MODE && target_MODE != MANUAL_MODE && target_MODE != AUTO_MODE)
+	{
+		#ifdef DEBUG_MODE
+		printf("无法切换:未定义的模式 %d\r\n",target_MODE);
+		#endif
+		return false;
+	}
+	if( MODE != target_MODE)//模式变更
+	{
+		//退出旧模式 后处理
+		//退出自动模式时,重置自动模式结构体
+		if (MODE == AUTO_MODE)
+		{
+			AutoModeInfo_Init();
+		}
+		//停止
+		Task_MotorSys_AllThruster_Stop();
+		Task_MotorSys_AllSteer_0Angle();
+		Task_MotorSys_Manipulator_Close();
+		
+		//切换模式
+		MODE = target_MODE;
+		
+		//进入新模式 前处理	
+		if (target_MODE == DEFAULT_MODE)		
+		{
+			#ifdef DEBUG_MODE
+			printf("切换为默认模式\r\n");
+			#endif
+		}
+		else if (target_MODE == MANUAL_MODE)
+		{
+			rt_sem_release(ManualCmd_Sem);//释放信号量,重置手柄计时器
+			#ifdef DEBUG_MODE
+			printf("切换为手动模式\r\n");
+			#endif
+		}
+		else if (target_MODE == AUTO_MODE)
+		{
+			#ifdef DEBUG_MODE
+			printf("切换为自动模式\r\n");
+			#endif
+		}
+	}
+	//模式未变更
+	else
+	{
+		if (target_MODE == MANUAL_MODE)
+		{
+			rt_sem_release(ManualCmd_Sem);//释放信号量,重置手柄计时器
+		}
+	}
+	return true;
+	
+}
 
-
+	
 
 
 

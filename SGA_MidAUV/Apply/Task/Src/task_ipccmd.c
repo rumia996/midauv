@@ -412,11 +412,12 @@ void Task_IPCcmd_Handle(void)
 									return;
 							}
 							//若命令有效,切换当前模式为MANUAL_MODE,并释放信号量
-							#ifdef DEBUG_MODE
-							printf("进入手柄模式\r\n");
-							#endif
-							MODE = MANUAL_MODE;
-							rt_sem_release(ManualCmd_Sem);
+							MODE_Switch(MANUAL_MODE);
+//							#ifdef DEBUG_MODE
+//							printf("进入手柄模式\r\n");
+//							#endif
+//							MODE = MANUAL_MODE;
+//							rt_sem_release(ManualCmd_Sem);
 							
 						}	
 						break;
@@ -432,7 +433,7 @@ void Task_IPCcmd_Handle(void)
 									uint8_t cmdbuf[20] = {0};//存储控制字符串	
 									extract_char_between_indexandchar(IPC_ReceBuf,cmdbuf,4,'$');//提取控制字符串
 									int16_t cmd = atoi((const char*)cmdbuf);//将ASCII数字转换为整数;除@ZAA,@ZAX,@ZAW命令外,参数均为ASCII整数								
-									bool reportflag = true;						
+									bool reportflag = true;									
 									switch (IPC_ReceBuf[3])		
 									{
 										case 'F':{	//@ZAF12$
@@ -550,10 +551,11 @@ void Task_IPCcmd_Handle(void)
 									return;							
 							}
 							//若命令有效,切换当前模式为AUTO_MODE
-							MODE = AUTO_MODE;
-							#ifdef DEBUG_MODE
-							printf("进入自动模式\r\n");
-							#endif							
+							MODE_Switch(AUTO_MODE);
+//							MODE = AUTO_MODE;
+//							#ifdef DEBUG_MODE
+//							printf("进入自动模式\r\n");
+//							#endif							
 						}	
 						break;
 						

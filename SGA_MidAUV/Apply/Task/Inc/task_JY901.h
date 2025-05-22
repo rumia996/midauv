@@ -8,9 +8,9 @@
 
 void Task_JY901_Handle(void);
 
-extern float Roll;	//ºá¹ö
-extern float Pitch;	//¸©Ñö
-extern float Yaw;	//º½Ïò
+//extern float Roll;	//ºá¹ö
+//extern float Pitch;	//¸©Ñö
+//extern float Yaw;	//º½Ïò
 
 float normalize_angle(float angle);
 float transform_angle(float target_yaw);

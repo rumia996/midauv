@@ -18,6 +18,6 @@ void Task_TDmeter_OnceMode(void);
 void Task_TDmeter_SleepMode(void);
 void Task_TDmeter_Getmessage(void);
 
-extern float Temperature;
-extern float Depth;
+//extern float Temperature;
+//extern float Depth;
 #endif

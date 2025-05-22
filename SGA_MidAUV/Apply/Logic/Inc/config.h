@@ -7,20 +7,13 @@
 #include "dev_conf.h"
 
 
-//#define DEBUG_MODE//DEBUG模式开关,注释此行关闭DEBUG
+#define DEBUG_MODE//DEBUG模式开关,注释此行关闭DEBUG
 /*运行模式宏定义*/
-#define TEST_MODE 0
+#define DEFAULT_MODE 0
 #define MANUAL_MODE 1
 #define AUTO_MODE 2
 
 extern uint8_t MODE;
-
-/*运行模式宏定义*/
-#define TEST_MODE 0		//测试模式
-#define MANUAL_MODE 1	//手柄模式
-#define AUTO_MODE 2		//自动模式
-#define SLEEP_MODE 3	//低功耗模式
-extern uint8_t MODE;	//当前模式
 
 /*继电器控制宏定义*/
 #define POW_MAG 0		//磁力仪

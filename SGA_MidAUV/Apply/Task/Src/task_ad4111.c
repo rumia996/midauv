@@ -52,7 +52,7 @@ void Task_AD4111_Sync(void)
  * @param Null
  */
 void Task_AD4111_Handle(void)
-{
+{	
 	float gradientmagnet_front_x = 0.0f;
 	float gradientmagnet_front_y = 0.0f;
 	float gradientmagnet_front_z = 0.0f;
@@ -64,13 +64,12 @@ void Task_AD4111_Handle(void)
 	float gradientmagnet_right_z = 0.0f;
 	
     AD_Acquisition(&AD4111_1);
-     AD_Acquisition(&AD4111_2);
+    AD_Acquisition(&AD4111_2);
 
-	
     //将数据放入报告数据缓存区
 	//原始数据单位为V
 	//磁力仪输出+-10V,对应量程+-100nT,将原始数据乘10即为磁感应强度
-	//前置磁力仪	XYZ
+	//前置磁力仪	X1Y1Z1
 	gradientmagnet_front_x = (float)AD4111_2.port[0].result * 10;
 	gradientmagnet_front_y = (float)AD4111_2.port[1].result * 10;
 	gradientmagnet_front_z = (float)AD4111_2.port[4].result * 10;
@@ -78,7 +77,7 @@ void Task_AD4111_Handle(void)
 	memcpy(&ReportDataBuffer[GRADIENTMAGNET_FRONT_BASE + 1 * FLOAT_SIZE	],&gradientmagnet_front_y,FLOAT_SIZE);
 	memcpy(&ReportDataBuffer[GRADIENTMAGNET_FRONT_BASE + 2 * FLOAT_SIZE	],&gradientmagnet_front_z,FLOAT_SIZE);
 	
-	//左磁力仪	XYZ
+	//左磁力仪	X2Y2Z2
 	gradientmagnet_left_x = (float)AD4111_2.port[5].result * 10;
 	gradientmagnet_left_y = (float)AD4111_2.port[6].result * 10;
 	gradientmagnet_left_z = (float)AD4111_2.port[7].result * 10;
@@ -86,7 +85,7 @@ void Task_AD4111_Handle(void)
 	memcpy(&ReportDataBuffer[GRADIENTMAGNET_LEFT_BASE + 1 * FLOAT_SIZE	],&gradientmagnet_left_y,FLOAT_SIZE);
 	memcpy(&ReportDataBuffer[GRADIENTMAGNET_LEFT_BASE + 2 * FLOAT_SIZE	],&gradientmagnet_left_z,FLOAT_SIZE);
 	
-	//右磁力仪	XYZ
+	//右磁力仪	X3Y3Z3
 	gradientmagnet_right_x = (float)AD4111_1.port[0].result * 10;
 	gradientmagnet_right_y = (float)AD4111_1.port[1].result * 10;
 	gradientmagnet_right_z = (float)AD4111_1.port[4].result * 10;
@@ -94,7 +93,6 @@ void Task_AD4111_Handle(void)
 	memcpy(&ReportDataBuffer[GRADIENTMAGNET_RIGHT_BASE + 1 * FLOAT_SIZE	],&gradientmagnet_right_y,FLOAT_SIZE);
 	memcpy(&ReportDataBuffer[GRADIENTMAGNET_RIGHT_BASE + 2 * FLOAT_SIZE	],&gradientmagnet_right_z,FLOAT_SIZE);
 	
-	#define DEBUG_PRINTF
 	#ifdef DEBUG_PRINTF
 	printf("X1 %f Y1 %f Z1 %f\r\n",gradientmagnet_front_x,gradientmagnet_front_y,gradientmagnet_front_z);
 	printf("X2 %f Y2 %f Z2 %f\r\n",gradientmagnet_left_x,gradientmagnet_left_y,gradientmagnet_left_z);

@@ -2,8 +2,8 @@
 
 uint8_t TDmeter_ReceBuf[100] = {0};	//存储上位机命令字符串,无符号字符类型数组
 uint8_t TDmeter_ReceNum = 0;	//命令字符串长度
-float Temperature = 0;		//温度
-float Depth = 0;			//深度
+//float Temperature = 0;		//温度
+//float Depth = 0;			//深度
 
 /*温深仪句柄*/
 void Task_TDmeter_Handle(void)
@@ -35,6 +35,8 @@ void Task_TDmeter_Handle(void)
 				extract_str_between_2char(Buf,DepthBuf,':','\r');
 				if (TemperatureBuf[0] != '\0' )
 				{
+					float Temperature = 0.0f;
+					float Depth = 0.0f;
 					Temperature = atof((const char*)TemperatureBuf);
 					Depth = atof((const char*)DepthBuf) - 10.0;	/*压力dbar-10就是深度值/米*/
 					memcpy(&ReportDataBuffer[TEMPERATURE_BASE],&Temperature,FLOAT_SIZE);					

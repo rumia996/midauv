@@ -117,10 +117,10 @@ void AutoModeThread(void* pramenter)
 		{
 			Task_AutoMode_Process(&AMInfo);
 		}
-		else
-		{
-			AutoModeInfo_Init();
-		}
+//		else
+//		{
+//			AutoModeInfo_Init();
+//		}
 		Drv_Delay_Ms(1); 
 	}
 }

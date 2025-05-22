@@ -1,7 +1,7 @@
 #include "task_JY901.h"
-float Roll = 0;	//横滚
-float Pitch = 0;	//俯仰
-float Yaw = 0;	//航向
+//float Roll = 0;	//横滚
+//float Pitch = 0;	//俯仰
+//float Yaw = 0;	//航向
 /**
  * @brief JY901处理函数
  * @param Null
@@ -46,9 +46,9 @@ void Task_JY901_Handle(void)
 #endif
 			//将数据放入报告数据缓存区
 			/*经测试,IM板Y轴与AUV中轴对齐的安装方式下,实际的滚转角Roll是原始数据的俯仰角Pitch;实际的俯仰角Pitch是原始数据的滚转角Roll,这里对数据位置作了调整*/
-			Roll = JY901S.stcAngle.ConPitch;
-			Pitch = JY901S.stcAngle.ConRoll;
-			Yaw = normalize_angle(JY901S.stcAngle.ConYaw + 17);
+			float Roll = JY901S.stcAngle.ConPitch;
+			float Pitch = JY901S.stcAngle.ConRoll;
+			float Yaw = normalize_angle(JY901S.stcAngle.ConYaw + 17);
 			memcpy(&ReportDataBuffer[RPY_ATTITUED_BASE 					],&Roll,FLOAT_SIZE);//滚转角Roll
 			memcpy(&ReportDataBuffer[RPY_ATTITUED_BASE + 1 * FLOAT_SIZE	],&Pitch,FLOAT_SIZE);	//俯仰角Pitch
 			memcpy(&ReportDataBuffer[RPY_ATTITUED_BASE + 2 * FLOAT_SIZE	],&Yaw,FLOAT_SIZE); 	//航向角Yaw		

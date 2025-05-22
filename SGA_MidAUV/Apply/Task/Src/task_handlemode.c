@@ -21,11 +21,9 @@ void Task_HandleMode_Process()
 			else if (result == -RT_ETIMEOUT)
 			{
 				#ifdef DEBUG_MODE
-				printf("退出手柄模式!进入测试模式\r\n");
+				printf("超时退出手柄模式\r\n");
 				#endif
-				MODE = TEST_MODE;
-				Task_MotorSys_AllThruster_Stop();
-				Task_MotorSys_AllSteer_0Angle();				
+				MODE_Switch(DEFAULT_MODE);			
 			}			
 		}
 	}	

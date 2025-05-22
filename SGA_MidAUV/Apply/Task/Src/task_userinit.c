@@ -24,8 +24,8 @@ void Task_UserInit(void)
 	Task_MotorSys_Init();//4√Î
 	CRC_Init();
 	
-	//Power_Test();
-	Power_AllOn();
+	Power_Test();
+	//Power_AllOn();
 	TDmeter_Init();
 	
 	
