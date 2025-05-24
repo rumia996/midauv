@@ -10,7 +10,7 @@
 #define SERVORS_MAXANGLE_PWM_HIGHTIME 2500
 #define SERVORS_MINANGLE_PWM_HIGHTIME 500
 #define SERVORS_ANGLE_RANGE 270
-#define SERVORS_DELTA (SERVORS_MAXANGLE_PWM_HIGHTIME-STOP_PWM_HIGHTIME) / (SERVORS_ANGLE_RANGE / 2)
+#define SERVORS_DELTA (SERVORS_MAXANGLE_PWM_HIGHTIME-STOP_PWM_HIGHTIME) / (SERVORS_ANGLE_RANGE / 2.0f)
 #define SERVORS_0ANGLE_PWM_HIGHTIME 1500
 /*推进器高电平时间调整值，用于推力平衡 us*/
 #define LVT_DELTA 0
@@ -32,7 +32,7 @@ void Task_MotorSys_Init(void)
 }
 /*
  *  舵机信号范围500-2500us(2.5%-12.5%)可推测出1500us(7.5%)是停转
- *   角度270°,即±135°正转定义为面向舵机时逆时针旋转
+ *   角度270°,即±135°正转定义为面向舵机时舵盘逆时针旋转
  *   PWM计算公式为:占空比=(12.5-2.5)/135*angle+7.5 高电平时间 = (2500-500)/135*angle+1500其中angle是期望的角度,-135°~+135°
  *  10.83%  2167		+90°
  *  9.16%  1833 	+45°
@@ -40,24 +40,47 @@ void Task_MotorSys_Init(void)
  *  5.83%  1167		-45°
  *  4.16% 833 		-90°
  * 	或者 占空比=(12.5-2.5)/270*angle 高电平时间 = (2500-500)/270*angle angle从0-270°
- *	舵机具体要怎么动还不知道,驱动不急着写.
+ *	左舵机 -15度对应舵板水平 0度舵板微微向下 10度舵板向下达到最大；-90度舵板向上达到最大 
+ *  右舵机 15度对应舵板水平 0度舵板微微向下 -10度舵板向下达到最大；90度舵板向上达到最大
  */
  
 /**
  * @brief 单个舵机角度设置
  * @param 舵机编号 左舵机LS 右舵机RS 宏定义在config.h
- * @param 角度值 
+ * @param 角度值 -135°~+135°
  * @retval true/false
 */
 bool Task_MotorSys_Steer_Angle_Set(uint8_t index,int16_t ang)
 {
-	if (index == LS || index == RS)
+	if (index == LS)
 	{
-		uint16_t _highTime = SERVORS_DELTA * ang + SERVORS_0ANGLE_PWM_HIGHTIME;//ang -135°~+135°
-		//uint16_t _highTime = (SERVORS_MAXANGLE_PWM_HIGHTIME - SERVORS_MINANGLE_PWM_HIGHTIME) / SERVORS_ANGLE_RANGE * ang;//ang 0-270°
-		Drv_PWM_HighLvTimeSet(&PWM[index], _highTime);
-		return true;
+		if (ang >=-90 && ang <= 10)
+		{
+			uint16_t _highTime = (SERVORS_DELTA+ 0.7f) * ang + SERVORS_0ANGLE_PWM_HIGHTIME;//ang -135°~+135°0.7f是补偿值，通过测试舵机试出来。
+			Drv_PWM_HighLvTimeSet(&PWM[index], _highTime);		
+			return true;
+		}
 	}
+	if (index == RS)
+	{
+		if (ang >= -10 && ang <= 90)
+		{
+			uint16_t _highTime = (SERVORS_DELTA+ 0.7f) * ang + SERVORS_0ANGLE_PWM_HIGHTIME;//ang -135°~+135°0.7f是补偿值，通过测试舵机试出来。
+			Drv_PWM_HighLvTimeSet(&PWM[index], _highTime);		
+			return true;
+		}
+	}	
+//	if (index == LS || index == RS)
+//	{
+//		if (ang >= -135 && ang <= 135)
+//		{
+//			uint16_t _highTime = (SERVORS_DELTA+ 0.7f) * ang + SERVORS_0ANGLE_PWM_HIGHTIME;//ang -135°~+135°0.7f是补偿值，通过测试舵机试出来。
+//			//uint16_t _highTime = (SERVORS_MAXANGLE_PWM_HIGHTIME - SERVORS_MINANGLE_PWM_HIGHTIME) / SERVORS_ANGLE_RANGE * ang;//ang 0-270°
+//			Drv_PWM_HighLvTimeSet(&PWM[index], _highTime);			
+//		}
+
+//		return true;
+//	}
 	return false;
 }
 
@@ -71,11 +94,7 @@ bool Task_MotorSys_AllSteer_Angle_Set(int16_t ang)
 {
 	if (ang >= -135 && ang <= 135)
 	{
-		uint16_t _highTime = SERVORS_DELTA * ang + SERVORS_0ANGLE_PWM_HIGHTIME;//ang -135°~+135°
-		//uint16_t _highTime = (SERVORS_MAXANGLE_PWM_HIGHTIME - SERVORS_MINANGLE_PWM_HIGHTIME) / SERVORS_ANGLE_RANGE * ang;//ang 0-270°
-		Drv_PWM_HighLvTimeSet(&PWM[LS], _highTime);
-		Drv_PWM_HighLvTimeSet(&PWM[RS], _highTime);
-		return true;
+		return Task_MotorSys_Steer_Angle_Set(LS,ang) && Task_MotorSys_Steer_Angle_Set(RS,ang);
 	}
 	return false;
 }
@@ -709,58 +728,50 @@ void Task_MotorSys_Servos_Test()
 {
 	while(1)
 	{
-		//Task_MotorSys_Steer_Angle_Set(LS,45);
-		Task_MotorSys_Steer_Angle_Set(RS,45);
-		Drv_Delay_Ms(2000);
-		Task_MotorSys_Steer_Angle_Set(RS,90);
-		Drv_Delay_Ms(2000);
-		Task_MotorSys_Steer_Angle_Set(RS,-45);
-		Drv_Delay_Ms(2000);
-		Task_MotorSys_Steer_Angle_Set(RS,-90);
+//		Task_MotorSys_Steer_Angle_Set(LS,45);
+//		Task_MotorSys_Steer_Angle_Set(RS,45);
+//		Drv_Delay_Ms(2000);
+//		Task_MotorSys_Steer_Angle_Set(RS,90);
+//		Drv_Delay_Ms(2000);
+//		Task_MotorSys_Steer_Angle_Set(RS,-45);
+//		Drv_Delay_Ms(2000);
+//		Task_MotorSys_Steer_Angle_Set(RS,-90);
+//		Drv_Delay_Ms(2000);
+//		Task_MotorSys_AllSteer_0Angle();
+//		Drv_Delay_Ms(2000);
+
+//		Task_MotorSys_AllSteer_Angle_Set(30);
+//		Drv_Delay_Ms(2000);
+//		Task_MotorSys_AllSteer_Angle_Set(60);
+//		Drv_Delay_Ms(2000);
+//		Task_MotorSys_AllSteer_Angle_Set(90);
+//		Drv_Delay_Ms(2000);
+		
+//		Task_MotorSys_AllSteer_Angle_Set(90);
+//		Drv_Delay_Ms(2000);
+//		Task_MotorSys_AllSteer_0Angle();
+//		Drv_Delay_Ms(2000);
+//		Task_MotorSys_AllSteer_Angle_Set(-90);
+//		Drv_Delay_Ms(2000);
+//		Task_MotorSys_AllSteer_0Angle();
+//		Drv_Delay_Ms(4000);
+
+		Task_MotorSys_AllSteer_Angle_Set(45);
+		//Drv_PWM_HighLvTimeSet(&PWM[RS],2167);
 		Drv_Delay_Ms(2000);
 		Task_MotorSys_AllSteer_0Angle();
 		Drv_Delay_Ms(2000);
-//		Task_MotorSys_Steer_Angle_Set(LS,-90);
-//		Task_MotorSys_Steer_Angle_Set(RS,90);
-//		Drv_Delay_Ms(4000);
-//		Task_MotorSys_AllSteer_0Angle();
-//		Drv_Delay_Ms(4000);
-		Task_MotorSys_AllSteer_Angle_Set(30);
-		Drv_Delay_Ms(2000);
-		Task_MotorSys_AllSteer_Angle_Set(60);
-		Drv_Delay_Ms(2000);
 		Task_MotorSys_AllSteer_Angle_Set(90);
+		//Drv_PWM_HighLvTimeSet(&PWM[RS],833);
 		Drv_Delay_Ms(2000);
-//		Task_MotorSys_AllSteer_0Angle();
-//		Drv_Delay_Ms(4000);
+		Task_MotorSys_AllSteer_0Angle();
+		Drv_Delay_Ms(4000);
 	}
 }
 
 
 /*动力系统句柄*/
 void Task_MotorSys_Handle(void)
-{
-//	/*手柄模式安全保护程序;应将此线程优先级设为最低以免阻塞其他线程!*/
-//	/*一段时间收不到下一条手柄命令,关闭所有动力*/
-//    rt_tick_t timeout_tick = rt_tick_from_millisecond(800);
-//	while(1)
-//	{
-//		if (MODE == MANUAL_MODE)
-//		{		
-//			rt_err_t result = rt_sem_take(ManualCmd_Sem, timeout_tick);		
-//			if (result == RT_EOK)
-//			{
-//				continue;
-//			}
-//			else if (result == -RT_ETIMEOUT)
-//			{
-//				#ifdef DEBUG_MODE
-//				printf("退出手柄模式!进入测试模式\r\n");
-//				#endif
-//				MODE = DEFAULT_MODE;
-//				Task_MotorSys_AllThruster_Stop();
-//				Task_MotorSys_AllSteer_0Angle();				
-//			}
-//		}		
-//	}		
+{	
+	Task_MotorSys_Servos_Test();
 }
