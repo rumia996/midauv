@@ -773,5 +773,5 @@ void Task_MotorSys_Servos_Test()
 /*动力系统句柄*/
 void Task_MotorSys_Handle(void)
 {	
-	Task_MotorSys_Servos_Test();
+	//Task_MotorSys_Servos_Test();
 }
