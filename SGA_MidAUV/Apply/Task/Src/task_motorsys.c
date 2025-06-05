@@ -618,26 +618,26 @@ void Task_MotorSys_Thruster_Test()
 		//≥ı ºªØ
 		//Task_MotorSys_Init();
 		
-//		//µ•∂¿≤‚ ‘
-//		Task_MotorSys_Thruster_Start(LVT,10);
-//		Drv_Delay_Ms(5000);
-//		Task_MotorSys_Thruster_Stop(LVT);
-//		Task_MotorSys_Thruster_Start(RVT,10);
-//		Drv_Delay_Ms(5000);
-//		Task_MotorSys_Thruster_Stop(RVT);
-//		Task_MotorSys_Thruster_Start(BVT,10);
-//		Drv_Delay_Ms(5000);
-//		Task_MotorSys_Thruster_Stop(BVT);
-//		Task_MotorSys_Thruster_Start(LMT,10);
-//		Drv_Delay_Ms(5000);
-//		Task_MotorSys_Thruster_Stop(LMT);
-//		Task_MotorSys_Thruster_Start(RMT,10);
-//		Drv_Delay_Ms(5000);
-//		Task_MotorSys_Thruster_Stop(RMT);
-//		Drv_Delay_Ms(2000);
-//		
-//		Task_MotorSys_AllThruster_Stop();
-//		Drv_Delay_Ms(2000);
+		//µ•∂¿≤‚ ‘
+		Task_MotorSys_Thruster_Start(LVT,10);
+		Drv_Delay_Ms(5000);
+		Task_MotorSys_Thruster_Stop(LVT);
+		Task_MotorSys_Thruster_Start(RVT,10);
+		Drv_Delay_Ms(5000);
+		Task_MotorSys_Thruster_Stop(RVT);
+		Task_MotorSys_Thruster_Start(BVT,10);
+		Drv_Delay_Ms(5000);
+		Task_MotorSys_Thruster_Stop(BVT);
+		Task_MotorSys_Thruster_Start(LMT,10);
+		Drv_Delay_Ms(5000);
+		Task_MotorSys_Thruster_Stop(LMT);
+		Task_MotorSys_Thruster_Start(RMT,10);
+		Drv_Delay_Ms(5000);
+		Task_MotorSys_Thruster_Stop(RMT);
+		Drv_Delay_Ms(2000);
+		
+		Task_MotorSys_AllThruster_Stop();
+		Drv_Delay_Ms(2000);
 //		
 //		//±‡◊È≤‚ ‘
 //		Task_MotorSys_AllThruster_Start(10);
@@ -656,33 +656,33 @@ void Task_MotorSys_Thruster_Test()
 //		Drv_Delay_Ms(5000);
 //		Task_MotorSys_MainThruster_Stop();
 //		Drv_Delay_Ms(2000);
-		//◊™Õ‰≤‚ ‘
-		Task_MotorSys_TurnLeft(10);
-		Drv_Delay_Ms(5000);
-		Task_MotorSys_MainThruster_Stop();
-		Drv_Delay_Ms(2000);
-		Task_MotorSys_TurnRight(10);
-		Drv_Delay_Ms(5000);
-		Task_MotorSys_MainThruster_Stop();
-		Drv_Delay_Ms(2000);		
-		//…œ∏°œ¬«±
-		Task_MotorSys_Float(10);
-		Drv_Delay_Ms(5000);
-		Task_MotorSys_VerticalThruster_Stop();
-		Drv_Delay_Ms(2000);
-		Task_MotorSys_Dive(10);
-		Drv_Delay_Ms(5000);
-		Task_MotorSys_VerticalThruster_Stop();
-		Drv_Delay_Ms(2000);
-		//«∞«„∫Û«„
-		Task_MotorSys_LeanForward(10);
-		Drv_Delay_Ms(5000);
-		Task_MotorSys_VerticalThruster_Stop();
-		Drv_Delay_Ms(2000);
-		Task_MotorSys_LeanBack(10);
-		Drv_Delay_Ms(5000);
-		Task_MotorSys_VerticalThruster_Stop();
-		Drv_Delay_Ms(2000);
+//		//◊™Õ‰≤‚ ‘
+//		Task_MotorSys_TurnLeft(10);
+//		Drv_Delay_Ms(5000);
+//		Task_MotorSys_MainThruster_Stop();
+//		Drv_Delay_Ms(2000);
+//		Task_MotorSys_TurnRight(10);
+//		Drv_Delay_Ms(5000);
+//		Task_MotorSys_MainThruster_Stop();
+//		Drv_Delay_Ms(2000);		
+//		//…œ∏°œ¬«±
+//		Task_MotorSys_Float(10);
+//		Drv_Delay_Ms(5000);
+//		Task_MotorSys_VerticalThruster_Stop();
+//		Drv_Delay_Ms(2000);
+//		Task_MotorSys_Dive(10);
+//		Drv_Delay_Ms(5000);
+//		Task_MotorSys_VerticalThruster_Stop();
+//		Drv_Delay_Ms(2000);
+//		//«∞«„∫Û«„
+//		Task_MotorSys_LeanForward(10);
+//		Drv_Delay_Ms(5000);
+//		Task_MotorSys_VerticalThruster_Stop();
+//		Drv_Delay_Ms(2000);
+//		Task_MotorSys_LeanBack(10);
+//		Drv_Delay_Ms(5000);
+//		Task_MotorSys_VerticalThruster_Stop();
+//		Drv_Delay_Ms(2000);
 //		//±‰ÀŸ≤‚ ‘
 //		Task_MotorSys_AllThruster_Start(1);
 //		Drv_Delay_Ms(2000);
@@ -709,11 +709,11 @@ void Task_MotorSys_Thruster_Test()
 //		Task_MotorSys_AllThruster_Start(12);	
 //		Drv_Delay_Ms(2000);
 		
-		Task_MotorSys_AllThruster_Stop();
-		Drv_Delay_Ms(2000);
+//		Task_MotorSys_AllThruster_Stop();
+//		Drv_Delay_Ms(2000);
 
-		//Õ£÷π
-		Task_MotorSys_AllThruster_Stop();
+//		//Õ£÷π
+//		Task_MotorSys_AllThruster_Stop();
 }
 /*ª˙–µ ÷≤‚ ‘*/
 void Task_MotorSys_Manipulator_Test()
@@ -728,44 +728,16 @@ void Task_MotorSys_Servos_Test()
 {
 	while(1)
 	{
-//		Task_MotorSys_Steer_Angle_Set(LS,45);
-//		Task_MotorSys_Steer_Angle_Set(RS,45);
-//		Drv_Delay_Ms(2000);
-//		Task_MotorSys_Steer_Angle_Set(RS,90);
-//		Drv_Delay_Ms(2000);
-//		Task_MotorSys_Steer_Angle_Set(RS,-45);
-//		Drv_Delay_Ms(2000);
-//		Task_MotorSys_Steer_Angle_Set(RS,-90);
-//		Drv_Delay_Ms(2000);
-//		Task_MotorSys_AllSteer_0Angle();
-//		Drv_Delay_Ms(2000);
-
-//		Task_MotorSys_AllSteer_Angle_Set(30);
-//		Drv_Delay_Ms(2000);
-//		Task_MotorSys_AllSteer_Angle_Set(60);
-//		Drv_Delay_Ms(2000);
-//		Task_MotorSys_AllSteer_Angle_Set(90);
-//		Drv_Delay_Ms(2000);
-		
-//		Task_MotorSys_AllSteer_Angle_Set(90);
-//		Drv_Delay_Ms(2000);
-//		Task_MotorSys_AllSteer_0Angle();
-//		Drv_Delay_Ms(2000);
-//		Task_MotorSys_AllSteer_Angle_Set(-90);
-//		Drv_Delay_Ms(2000);
-//		Task_MotorSys_AllSteer_0Angle();
-//		Drv_Delay_Ms(4000);
-
-		Task_MotorSys_AllSteer_Angle_Set(45);
-		//Drv_PWM_HighLvTimeSet(&PWM[RS],2167);
+		Task_MotorSys_Steer_Angle_Set(LS,-90);
+		Drv_Delay_Ms(2000);
+		Task_MotorSys_Steer_Angle_Set(LS,10);
+		Drv_Delay_Ms(2000);
+		Task_MotorSys_Steer_Angle_Set(RS,90);
+		Drv_Delay_Ms(2000);
+		Task_MotorSys_Steer_Angle_Set(RS,-10);
 		Drv_Delay_Ms(2000);
 		Task_MotorSys_AllSteer_0Angle();
 		Drv_Delay_Ms(2000);
-		Task_MotorSys_AllSteer_Angle_Set(90);
-		//Drv_PWM_HighLvTimeSet(&PWM[RS],833);
-		Drv_Delay_Ms(2000);
-		Task_MotorSys_AllSteer_0Angle();
-		Drv_Delay_Ms(4000);
 	}
 }
 
@@ -774,4 +746,5 @@ void Task_MotorSys_Servos_Test()
 void Task_MotorSys_Handle(void)
 {	
 	//Task_MotorSys_Servos_Test();
+	//Task_MotorSys_Thruster_Test();
 }
