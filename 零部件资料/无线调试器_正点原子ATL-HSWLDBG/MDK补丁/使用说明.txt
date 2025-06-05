@@ -1,0 +1,1 @@
+把补丁文件”CMSIS_DAP.dll”和”ULINKPLUS_DAP.dll”复制到C:\Keil_v5\ARM\BIN文件夹下替换原来的文件，这里”C:\Keil_v5”是MDK的安装路径，请按照实际情况处理。
