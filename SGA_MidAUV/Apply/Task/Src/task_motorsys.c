@@ -19,6 +19,9 @@
 #define LMT_DELTA 0
 #define RMT_DELTA 0
 
+float rudder_ang_left = 0;	//用于add方法累积角度值
+float rudder_ang_right = 0;
+
 /**
  * @brief 动力系统初始化
  * @retval null
@@ -51,18 +54,20 @@ void Task_MotorSys_Init(void)
  * @param 舵板角度值 向上最大22°向下最大-15°舵板角度 = -0.5 × 左舵机角度 - 5 ;左舵机角度 = -2*(舵板角度+5)
  * @retval true/false
 */
-bool Task_MotorSys_Rudder_Angle_Set(uint8_t index ,int8_t ang)
+bool Task_MotorSys_Rudder_Angle_Set(uint8_t index ,float ang)
 {
 	if (ang >= -15 && ang <= 22)
 	{
 		int16_t steer_ang = 0;
-		steer_ang = - 2 * (ang + 5);
+		steer_ang = - 2.0f * (ang + 5);
 		if (index == LS)
 		{
+			rudder_ang_left = ang;
 			return Task_MotorSys_Steer_Angle_Set(LS,steer_ang);
 		}
 		if (index == RS)
 		{
+			rudder_ang_right = ang;
 			return Task_MotorSys_Steer_Angle_Set(RS, -steer_ang + 15);
 		}	
 	}
@@ -74,13 +79,13 @@ bool Task_MotorSys_Rudder_Angle_Set(uint8_t index ,int8_t ang)
  * @param 舵板角度值 向上最大25°向下最大-15°
  * @retval true/false
 */
-bool Task_MotorSys_AllRudder_Angle_Set(int16_t ang)
+bool Task_MotorSys_AllRudder_Angle_Set(float ang)
 {
 	return Task_MotorSys_Rudder_Angle_Set(LS,ang) && Task_MotorSys_Rudder_Angle_Set(RS,ang);
 }
 
 /**
- * @brief 获取当前舵板角度;读取舵机高电平时间反解出舵板角度
+ * @brief 获取当前舵板角度;读取舵机高电平时间反解出舵板角度，误差较大
  * @param 舵机编号 左舵机LS 右舵机RS 宏定义在config.h
  * @retval 角度值
 */
@@ -104,18 +109,32 @@ float Task_MotorSys_GetRudder_Angle(uint8_t index)
 }
 
 /**
- * @brief 单个舵板角度增量变化 误差大,会导致两个舵板不同步
+ * @brief 舵板角度增量变化 效果不太好，尽量别用
  * @param 舵机编号 左舵机LS 右舵机RS 宏定义在config.h
  * @param 增量值 不宜太小,至少在2°以上
  * @retval true/false
 */
-bool Task_MotorSys_Rudder_Angle_Add(uint8_t index,int16_t ang)
+bool Task_MotorSys_Rudder_Angle_Add(uint8_t index,float ang)
 {
 	if (index == LS || index == RS)
 	{
-		Task_MotorSys_Rudder_Angle_Set(LS,Task_MotorSys_GetRudder_Angle(LS) + ang);
-		Task_MotorSys_Rudder_Angle_Set(RS,Task_MotorSys_GetRudder_Angle(LS) + ang);
+		//使用float全局变量存储增量变化,消除舍入误差
+		if (index == LS)
+		{
+			rudder_ang_left += ang;	
+			Task_MotorSys_Rudder_Angle_Set(index,rudder_ang_left);			
+		}
+		if (index == RS)
+		{
+			rudder_ang_right += ang;	
+			Task_MotorSys_Rudder_Angle_Set(index,rudder_ang_right);				
+		}	
+		//↓误差大,会导致两个舵板不同步
 		//return Task_MotorSys_Rudder_Angle_Set(index,Task_MotorSys_GetRudder_Angle(index) + ang);
+		//保证两个舵板同步，但必须一起动，且不流畅
+		//Task_MotorSys_Rudder_Angle_Set(LS,Task_MotorSys_GetRudder_Angle(LS) + ang);
+		//Task_MotorSys_Rudder_Angle_Set(RS,Task_MotorSys_GetRudder_Angle(LS) + ang);
+
 	}
 	return false;
 }
@@ -126,7 +145,7 @@ bool Task_MotorSys_Rudder_Angle_Add(uint8_t index,int16_t ang)
  * @param 角度值 -135°~+135°
  * @retval true/false
 */
-bool Task_MotorSys_Steer_Angle_Set(uint8_t index,int16_t ang)
+bool Task_MotorSys_Steer_Angle_Set(uint8_t index,float ang)
 {
 	if (index == LS)
 	{
@@ -166,7 +185,7 @@ bool Task_MotorSys_Steer_Angle_Set(uint8_t index,int16_t ang)
  * @param 角度值 
  * @retval true/false
 */
-bool Task_MotorSys_AllSteer_Angle_Set(int16_t ang)
+bool Task_MotorSys_AllSteer_Angle_Set(float ang)
 {
 	if (ang >= -135 && ang <= 135)
 	{
@@ -804,17 +823,6 @@ void Task_MotorSys_Servos_Test()
 {
 	while(1)
 	{
-//		Task_MotorSys_Steer_Angle_Set(LS,-90);
-//		Drv_Delay_Ms(2000);
-//		Task_MotorSys_Steer_Angle_Set(LS,5);
-//		Drv_Delay_Ms(2000);
-//		Task_MotorSys_Steer_Angle_Set(RS,90);
-//		Drv_Delay_Ms(2000);
-//		Task_MotorSys_Steer_Angle_Set(RS,-5);
-//		Drv_Delay_Ms(2000);
-//		Task_MotorSys_AllSteer_0Angle();
-//		Drv_Delay_Ms(2000);
-		
 //		//左舵向上最大-55 对应右舵向上最大为70
 //		Task_MotorSys_Steer_Angle_Set(LS,-55);
 //		Task_MotorSys_Steer_Angle_Set(RS,+70);
@@ -849,22 +857,48 @@ void Task_MotorSys_Servos_Test()
 //		Task_MotorSys_AllRudder_Angle_Set(22);
 //		Drv_Delay_Ms(2000);
 		
+		//慢速摆动 只能从指定角度开始
+//		Task_MotorSys_Rudder_Angle_Set(LS,-15);
+//		Task_MotorSys_Rudder_Angle_Set(RS,-15);
+//		Drv_Delay_Ms(2000);	
+//		for (int8_t i=-15;i<22;i++)
+//		{
+//			Task_MotorSys_AllRudder_Angle_Set(i);
+//			Drv_Delay_Ms(100);
+//		}
+//		for (int8_t i=22;i>-15;i--)
+//		{
+//			Task_MotorSys_AllRudder_Angle_Set(i);
+//			Drv_Delay_Ms(100);
+//		}
 		Task_MotorSys_Rudder_Angle_Set(LS,-15);
 		Task_MotorSys_Rudder_Angle_Set(RS,-15);
 		Drv_Delay_Ms(2000);	
-		while(Task_MotorSys_GetRudder_Angle(LS) <= 22)
+		while (rudder_ang_left<22)
 		{
-			Task_MotorSys_Rudder_Angle_Add(LS,2);
-			//Task_MotorSys_Rudder_Angle_Add(RS,2);
+			Task_MotorSys_Rudder_Angle_Add(LS,0.5);
+			Task_MotorSys_Rudder_Angle_Add(RS,0.5);
 			Drv_Delay_Ms(100);
 		}
-		Drv_Delay_Ms(2000);	
-		while(Task_MotorSys_GetRudder_Angle(LS) >= -14)
+		while (rudder_ang_left>-15)
 		{
-			Task_MotorSys_Rudder_Angle_Add(LS,-2);
-			//Task_MotorSys_Rudder_Angle_Add(RS,-2);
+			Task_MotorSys_Rudder_Angle_Add(LS,-0.5);
+			Task_MotorSys_Rudder_Angle_Add(RS,-0.5);
 			Drv_Delay_Ms(100);
-		}
+		}		
+//		for (int8_t i=-15;i<22;i++)
+//		{
+//			Task_MotorSys_Rudder_Angle_Add(LS,1);
+//			Task_MotorSys_Rudder_Angle_Add(RS,1);
+//			Drv_Delay_Ms(100);
+//		}
+//		for (int8_t i=22;i>-15;i--)
+//		{
+//			Task_MotorSys_Rudder_Angle_Add(LS,-1);
+//			Task_MotorSys_Rudder_Angle_Add(RS,-1);
+//			Drv_Delay_Ms(100);
+//		}		
+		
 	}
 }
 

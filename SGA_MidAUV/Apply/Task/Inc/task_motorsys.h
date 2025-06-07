@@ -7,13 +7,13 @@
 
 void Task_MotorSys_Init(void);
 
-bool Task_MotorSys_Rudder_Angle_Set(uint8_t index ,int8_t ang);
-bool Task_MotorSys_AllRudder_Angle_Set(int16_t ang);
-bool Task_MotorSys_Rudder_Angle_Add(uint8_t index,int16_t ang);
+bool Task_MotorSys_Rudder_Angle_Set(uint8_t index ,float ang);
+bool Task_MotorSys_AllRudder_Angle_Set(float ang);
+bool Task_MotorSys_Rudder_Angle_Add(uint8_t index,float ang);
 float Task_MotorSys_GetRudder_Angle(uint8_t index);
 
-bool Task_MotorSys_Steer_Angle_Set(uint8_t index,int16_t ang);
-bool Task_MotorSys_AllSteer_Angle_Set(int16_t ang);
+bool Task_MotorSys_Steer_Angle_Set(uint8_t index,float ang);
+bool Task_MotorSys_AllSteer_Angle_Set(float ang);
 bool Task_MotorSys_Steer_0Angle(uint8_t index);
 bool Task_MotorSys_AllSteer_0Angle(void);
 bool Task_MotorSys_Steer_Angle_Add(uint8_t index,int16_t ang);
