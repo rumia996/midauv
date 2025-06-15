@@ -24,6 +24,7 @@ bool Task_MotorSys_Manipulator_Close(void);
 bool Task_MotorSys_Thruster_SpeedSet(uint8_t index,uint16_t _highTime);
 bool Task_MotorSys_AllThruster_SpeedSet(uint16_t _highTime);
 
+int8_t Task_MotorSys_GetThrusterSpeed(uint8_t index);
 bool Task_MotorSys_Thruster_Start(uint8_t index,int8_t speed);
 bool Task_MotorSys_VerticalThruster_Start(int8_t speed);
 bool Task_MotorSys_MainThruster_Start(int8_t speed);

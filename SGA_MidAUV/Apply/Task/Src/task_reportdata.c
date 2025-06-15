@@ -50,7 +50,8 @@ void Task_ReportData_Handle(void)
 		printf("前磁X:%.2f 前磁Y:%.2f 前磁Z:%.2f\r\n",*p_gradientmagnet_front_x,*p_gradientmagnet_front_y,*p_gradientmagnet_front_z);
 		printf("左磁X:%.2f 左磁Y:%.2f 左磁Z:%.2f\r\n",*p_gradientmagnet_left_x,*p_gradientmagnet_left_y,*p_gradientmagnet_left_z);
 		printf("右磁X:%.2f 右磁Y:%.2f 右磁Z:%.2f\r\n",*p_gradientmagnet_right_x,*p_gradientmagnet_right_y,*p_gradientmagnet_right_z);
-		printf("左主推:%d 右主推:%d 后垂推:%d 左垂推:%d 右垂推:%d 左舵机:%d 右舵机:%d\r\n",*p_pwm_lmt,*p_pwm_rmt,*p_pwm_bvt,*p_pwm_lvt,*p_pwm_rvt,*p_pwm_ls,*p_pwm_rs);
+		//printf("左主推:%d 右主推:%d 后垂推:%d 左垂推:%d 右垂推:%d 左舵机:%d 右舵机:%d\r\n",*p_pwm_lmt,*p_pwm_rmt,*p_pwm_bvt,*p_pwm_lvt,*p_pwm_rvt,*p_pwm_ls,*p_pwm_rs);
+		printf("左主推:%d 右主推:%d 后垂推:%d 左垂推:%d 右垂推:%d 左舵角:%d 右舵角:%d\r\n",Task_MotorSys_GetThrusterSpeed(LMT),Task_MotorSys_GetThrusterSpeed(RMT),Task_MotorSys_GetThrusterSpeed(BVT),Task_MotorSys_GetThrusterSpeed(LVT),Task_MotorSys_GetThrusterSpeed(RVT),(int8_t)round(Task_MotorSys_GetRudder_Angle(LS)),(int8_t)round(Task_MotorSys_GetRudder_Angle(RS)));
 		printf("舱内电池:%d 舱外电池:%d\r\n",*p_battery_control,*p_battery_power);
 #endif
 		//printf("%s\r\n",ReportDataBuffer);//直接输出字符串会在碰到00时中断输出,别用	

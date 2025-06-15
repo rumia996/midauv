@@ -343,6 +343,14 @@ bool Task_MotorSys_Thruster_Start(uint8_t index,int8_t speed)
 	return Task_MotorSys_Thruster_SpeedSet(index,_highTime);	
 }
 
+int8_t Task_MotorSys_GetThrusterSpeed(uint8_t index)
+{
+	int8_t speed = 0;
+	uint16_t _highTime = Drv_PWM_ReadHighLvTime(&PWM[index]);
+	speed = round((_highTime - STOP_PWM_HIGHTIME)/((THRUSTER_MAX_PWM_HIGHTIME - STOP_PWM_HIGHTIME)/ 12.0));
+	return speed;
+}
+
 /**
  * @brief 垂直推进器开始工作
  * @param speed 速度档位 -12~+12共25档 负档位即推进器反转
