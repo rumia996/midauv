@@ -101,7 +101,7 @@ void Task_IPCcmd_Handle(void)
 									bool powercmdflag = true;
 									if (strlen((const char *)powercmd) != 7){//检查参数长度 7位
 										#ifdef DEBUG_MODE
-										printf("电源设置参数长度错误,cmd=%s/r/n",IPC_ReceBuf);
+										printf("Invalid power setting parameter length,cmd=%s/r/n",IPC_ReceBuf);
 										#endif
 										powercmdflag = false;
 										return;
@@ -150,7 +150,7 @@ void Task_IPCcmd_Handle(void)
 									}
 									if (powercmdflag != true){
 										#ifdef DEBUG_MODE
-										printf("电源设置参数错误,cmd=%s/r/n",IPC_ReceBuf);
+										printf("Invalid power setting,cmd=%s/r/n",IPC_ReceBuf);
 										#endif									
 										return;
 									}else {
@@ -169,7 +169,7 @@ void Task_IPCcmd_Handle(void)
 								}
 								default:
 									#ifdef DEBUG_MODE
-									printf("无法解析的命令位2:%c\r\n",IPC_ReceBuf[2]);
+								printf("Unable to resolve command bit 2:%c\r\n",IPC_ReceBuf[2]);
 									#endif
 									return;
 							}		
@@ -195,7 +195,7 @@ void Task_IPCcmd_Handle(void)
 										case '5':index=BVT;break;//后垂推								
 										default :
 											#ifdef DEBUG_MODE
-											printf("未定义的推进器编号:%c\r\n",IPC_ReceBuf[3]);
+										printf("Invalid thruster number:%c\r\n",IPC_ReceBuf[3]);
 											#endif
 											return;
 									}
@@ -203,30 +203,30 @@ void Task_IPCcmd_Handle(void)
 									extract_str_between_2char(IPC_ReceBuf,speedcmd,',','$');//提取转速档位 -12~12
 									speed = atoi((const char *)speedcmd);//转换为整数
 									#ifdef DEBUG_MODE
-									printf("cmd=%s,thrusterindex=%c,thrusterspeed=%d\r\n",IPC_ReceBuf,IPC_ReceBuf[3],speed);
+									printf("cmd=%s,thruster number=%c,thrusterspeed=%d\r\n",IPC_ReceBuf,IPC_ReceBuf[3],speed);
 									#endif
 									//执行
 									if (speed >= -12 && speed <= 12){
 										Task_MotorSys_Thruster_Start(index,speed);
 									}else{
 										#ifdef DEBUG_MODE	
-										printf("推进器速度错误:速度=%d\r\n",speed);
+										printf("Invalid thruster speed value:speed=%d\r\n",speed);
 										#endif
 										return;
 									}			
 									break;
 								}
-								case 'D'://舵机控制 增量式 增量暂定为1度 @MDP1$
+								case 'D'://舵机控制 增量式 增量暂定为2度 @MDP2$
 								{
 									uint8_t index = 0;
 									int16_t ang = 0;//存储舵机角度增量
 									switch (IPC_ReceBuf[3])
 									{
-										case 'P':ang = 1;break;//增加角度
-										case 'M':ang = -1;break;//减小角度
+										case 'P':ang = 2;break;//增加角度 舵板向上
+										case 'M':ang = -2;break;//减小角度 舵板向下
 										default:
 											#ifdef DEBUG_MODE
-											printf("未定义的舵机命令:%c\r\n",IPC_ReceBuf[3]);
+											printf("Invalid rudder command:%c\r\n",IPC_ReceBuf[3]);
 											#endif
 											return;
 									}
@@ -236,15 +236,16 @@ void Task_IPCcmd_Handle(void)
 										case '2':index = RS;break;									
 										default:
 											#ifdef DEBUG_MODE	
-											printf("未定义的舵机编号:%c\r\n",IPC_ReceBuf[4]);
+											printf("Invalid rudder number:%c\r\n",IPC_ReceBuf[4]);
 											#endif
 											return;
 									}
 									#ifdef DEBUG_MODE
-									printf("cmd=%s,servorindex=%c,angleadd=%d\r\n",IPC_ReceBuf,IPC_ReceBuf[4],ang);
+									printf("cmd=%s,ruddernumber=%c,angleadd=%d\r\n",IPC_ReceBuf,IPC_ReceBuf[4],ang);
 									#endif
 									//执行
-									Task_MotorSys_Steer_Angle_Add(index,ang);
+									Task_MotorSys_Rudder_Angle_Add(index,ang);
+									//Task_MotorSys_Steer_Angle_Add(index,ang);
 									break;
 								}
 								case 'M'://平动控制 @MMF12$
@@ -256,7 +257,7 @@ void Task_IPCcmd_Handle(void)
 									speed = atoi((const char *)speedcmd);//转换为整数
 									if (!(speed <=12)){//检查参数 speed>=0&&speed<=12 speed是无符号整型必定>=0,省略判断
 										#ifdef DEBUG_MODE	
-										printf("平动速度错误:速度=%d\r\n",speed);
+										printf("Invalid translational speed value:speed=%d\r\n",speed);
 										#endif								
 										return;
 									}
@@ -268,7 +269,7 @@ void Task_IPCcmd_Handle(void)
 										case 'D':Task_MotorSys_Dive(speed);break;//下潜
 										default:
 											#ifdef DEBUG_MODE	
-											printf("未定义的平动控制命令:%c\r\n",IPC_ReceBuf[3]);
+											printf("Invalid translational command:%c\r\n",IPC_ReceBuf[3]);
 											#endif
 											return;
 									}
@@ -290,7 +291,7 @@ void Task_IPCcmd_Handle(void)
 										case '5':speed = 10;break;//非常敏捷
 										default:
 											#ifdef DEBUG_MODE	
-											printf("未定义的转动速度档位:%c\r\n",IPC_ReceBuf[4]);
+											printf("Invalid rotation speed value:%c\r\n",IPC_ReceBuf[4]);
 											#endif
 											return;
 									}
@@ -305,7 +306,7 @@ void Task_IPCcmd_Handle(void)
 										case 'D':Task_MotorSys_LeanRight(speed);break;//右倾
 										default:
 											#ifdef DEBUG_MODE	
-											printf("未定义的转动控制命令:%c\r\n",IPC_ReceBuf[3]);
+											printf("Invalid rotation command:%c\r\n",IPC_ReceBuf[3]);
 											#endif
 											return;
 									}
@@ -336,7 +337,7 @@ void Task_IPCcmd_Handle(void)
 							
 									}else{
 										#ifdef DEBUG_MODE	
-										printf("摇杆航行控制参数错误:速度=%d,角度=%d\r\n",speed,angle);
+										printf("Invalid Joystick navigation parameters:speed=%d,Yaw=%d\r\n",speed,angle);
 										#endif
 										return;
 									}
@@ -360,7 +361,7 @@ void Task_IPCcmd_Handle(void)
 										//do something	
 									}else{
 										#ifdef DEBUG_MODE	
-										printf("摇杆姿态控制参数错误:力度=%d,角度=%d\r\n",force,angle);
+										printf("Invalid Joystick attitude parameters:force=%d,angle=%d\r\n",force,angle);
 										#endif
 										return;
 									}
@@ -407,7 +408,7 @@ void Task_IPCcmd_Handle(void)
 	*/
 								default:
 									#ifdef DEBUG_MODE
-									printf("无法解析的命令位2:%c\r\n",IPC_ReceBuf[2]);
+									printf("Unable to resolve command bit 2:%c\r\n",IPC_ReceBuf[2]);
 									#endif
 									return;
 							}
@@ -436,7 +437,7 @@ void Task_IPCcmd_Handle(void)
 									bool reportflag = true;									
 									switch (IPC_ReceBuf[3])		
 									{
-										case 'F':{	//@ZAF12$
+										case 'F':{	//前进	@ZAF12$
 											param_check_0to12(cmd,&reportflag);
 											if (reportflag != false){
 												AMInfo.target_speed = cmd;
@@ -444,7 +445,7 @@ void Task_IPCcmd_Handle(void)
 											}										
 											Report_Z(reportflag);
 										}break;
-										case 'B':{										
+										case 'B':{	//后退								
 											param_check_0to12(cmd,&reportflag);
 											if (reportflag != false){
 												AMInfo.target_speed = cmd;
@@ -452,7 +453,7 @@ void Task_IPCcmd_Handle(void)
 											}										
 											Report_Z(reportflag);
 										}break;
-										case 'L':{
+										case 'L':{ //左转
 											param_check_0to12(cmd,&reportflag);
 											if (reportflag != false){
 												AMInfo.target_speed = cmd;//
@@ -460,7 +461,7 @@ void Task_IPCcmd_Handle(void)
 											}										
 											Report_Z(reportflag);										
 										}break;
-										case 'R':{
+										case 'R':{	//右转
 											param_check_0to12(cmd,&reportflag);
 											if (reportflag != false){
 												AMInfo.target_speed = cmd;//
@@ -468,7 +469,7 @@ void Task_IPCcmd_Handle(void)
 											}										
 											Report_Z(reportflag);										
 										}break;
-										case 'U':{
+										case 'U':{	//上浮
 											param_check_0to12(cmd,&reportflag);
 											if (reportflag != false){
 												AMInfo.target_speed = cmd;
@@ -476,7 +477,7 @@ void Task_IPCcmd_Handle(void)
 											}										
 											Report_Z(reportflag);										
 										}break;
-										case 'D':{
+										case 'D':{	//下潜
 											param_check_0to12(cmd,&reportflag);
 											if (reportflag != false){
 												AMInfo.target_speed = cmd;
@@ -484,22 +485,22 @@ void Task_IPCcmd_Handle(void)
 											}										
 											Report_Z(reportflag);										
 										}break;
-										case 'S':{	//@ZAS30$
+										case 'S':{	//定深	@ZAS30$
 											AMInfo.target_depth = cmd;
 											AMInfo.Auto_Vertical_Mode = AUTO_SETDEPTH;
 											Report_Z(reportflag);
 										}break;
-										case 'E':{	//@ZAE30$
+										case 'E':{	//定高	@ZAE30$
 											AMInfo.target_height = cmd;
 											AMInfo.Auto_Vertical_Mode = AUTO_SETHEIGHT;
 											Report_Z(reportflag);
 										}break;
-										case 'H':{	//@ZAH-20$
+										case 'H':{	//定艏	@ZAH-20$
 											AMInfo.target_yaw = cmd;
 											AMInfo.Auto_Horizontal_Mode= AUTO_SETYAW;
 											Report_Z(reportflag);
 										}break;
-										case 'A':{	//@ZAA-10,120$
+										case 'A':{	//定姿	@ZAA-10,120$
 											if (strchr((const char*)IPC_ReceBuf,',') != NULL )
 											{
 												uint8_t pitchbuf[8];
@@ -513,12 +514,12 @@ void Task_IPCcmd_Handle(void)
 											//还没写
 											Report_Z(reportflag);
 										}break;
-										case 'V':{	//@ZAV5$										
+										case 'V':{	//定速	@ZAV5$										
 											//无法实现
 											reportflag = false;
 											Report_Z(reportflag);
 										}break;
-										case 'X':{	//@ZAX0$
+										case 'X':{	//紧急停止	@ZAX0$
 											if (IPC_ReceBuf[4] == '0'){
 												//实现
 												Task_MotorSys_AllThruster_Stop();
@@ -527,7 +528,7 @@ void Task_IPCcmd_Handle(void)
 											}else {reportflag = false;}
 											Report_Z(reportflag);
 										}break;
-										case 'W':{	//@ZAWF$
+										case 'W':{	//紧急上浮	@ZAWF$
 											if (IPC_ReceBuf[4]== 'F'){
 												//实现
 												Task_MotorSys_MainThruster_Stop();
@@ -538,7 +539,7 @@ void Task_IPCcmd_Handle(void)
 										}break;
 										default:
 											#ifdef DEBUG_MODE
-											printf("未定义的运动控制命令:%c\r\n",IPC_ReceBuf[3]);
+											printf("Invalid auto mode commands:%c\r\n",IPC_ReceBuf[3]);
 											#endif	
 										break;
 									}
@@ -546,7 +547,7 @@ void Task_IPCcmd_Handle(void)
 								break;
 								default:
 									#ifdef DEBUG_MODE
-									printf("无法解析的命令位2:%c\r\n",IPC_ReceBuf[2]);
+									printf("Unable to resolve command bit 2:%c\r\n",IPC_ReceBuf[2]);
 									#endif
 									return;							
 							}
@@ -561,7 +562,7 @@ void Task_IPCcmd_Handle(void)
 						
 						default:
 							#ifdef DEBUG_MODE
-							printf("无法解析的命令位1:%c\r\n",IPC_ReceBuf[1]);	
+							printf("Unable to resolve command bit 1:%c\r\n",IPC_ReceBuf[1]);	
 							#endif
 							return;
 					}		
@@ -569,7 +570,7 @@ void Task_IPCcmd_Handle(void)
 				else
 				{
 					#ifdef DEBUG_MODE
-					printf("未检测到帧头/帧尾:%s\r\n",IPC_ReceBuf);	
+					printf("No header/end of frame was detected:%s\r\n",IPC_ReceBuf);	
 					#endif				
 				}
             }
@@ -595,7 +596,7 @@ void param_check_0to12(int16_t cmd,bool * reportflag){
 	}else
 	{
 		#ifdef DEBUG_MODE
-		printf("运动控制命令参数错误,cmd=%s\r\n",IPC_ReceBuf);
+		printf("Invalid auto mode commands,cmd=%s\r\n",IPC_ReceBuf);
 		#endif
 		*reportflag = false;
 	}

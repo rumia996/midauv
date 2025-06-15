@@ -42,7 +42,7 @@ void Task_TDmeter_Handle(void)
 					memcpy(&ReportDataBuffer[TEMPERATURE_BASE],&Temperature,FLOAT_SIZE);					
 					memcpy(&ReportDataBuffer[DEPTH_BASE],&Depth,FLOAT_SIZE);	
 					#ifdef DEBUG_MODE
-					printf("温度:%.4f,深度:%.4f\r\n",Temperature,Depth);
+					printf("Temperature:%.4f,Depth:%.4f\r\n",Temperature,Depth);
 					#endif							
 				}
 			}
@@ -166,11 +166,11 @@ void Task_TDmeter_SleepMode()
 }
 
 /**
- * @brief 获取温深仪信息,仅DEBUG模式下在串口1输出
+ * @brief 获取温深仪信息,不完整,还需要在句柄接收处添加处理以在串口1打印信息
 */
 void Task_TDmeter_Getmessage()
 {
 	uint8_t SendBuffer[30] = {0};	
 	sprintf((char *)SendBuffer, "getmessage\r\n");
-	Drv_Uart_Transmit(&Uart1,SendBuffer,strlen((const char *)SendBuffer));
+	Drv_Uart_Transmit(&Uart4,SendBuffer,strlen((const char *)SendBuffer));
 }

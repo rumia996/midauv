@@ -1,0 +1,7 @@
+网口通信编程的三种方式：
+1. 用程序包
+2. 运用System.Net.Sockets命名空间下的TcpClient类实现
+
+在监听接收数据的时候，会报错：System.InvalidOperationException:“线程间操作无效: 从不是创建控件“messageBox”的线程访问它。”
+
+3. 运用Socket类实现

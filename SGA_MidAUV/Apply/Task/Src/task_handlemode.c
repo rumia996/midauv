@@ -21,7 +21,7 @@ void Task_HandleMode_Process()
 			else if (result == -RT_ETIMEOUT)
 			{
 				#ifdef DEBUG_MODE
-				printf("超时退出手柄模式\r\n");
+				printf("Timeout! Exit Manual mode\r\n");
 				#endif
 				MODE_Switch(DEFAULT_MODE);			
 			}			

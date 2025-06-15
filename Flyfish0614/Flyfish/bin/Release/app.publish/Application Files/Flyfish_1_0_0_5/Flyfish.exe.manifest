@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<asmv1:assembly xsi:schemaLocation="urn:schemas-microsoft-com:asm.v1 assembly.adaptive.xsd" manifestVersion="1.0" xmlns:asmv1="urn:schemas-microsoft-com:asm.v1" xmlns="urn:schemas-microsoft-com:asm.v2" xmlns:asmv2="urn:schemas-microsoft-com:asm.v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:co.v1="urn:schemas-microsoft-com:clickonce.v1" xmlns:asmv3="urn:schemas-microsoft-com:asm.v3" xmlns:dsig="http://www.w3.org/2000/09/xmldsig#" xmlns:co.v2="urn:schemas-microsoft-com:clickonce.v2">
+  <asmv1:assemblyIdentity name="Flyfish.exe" version="1.0.0.5" publicKeyToken="a5e50b6257a8f203" language="neutral" processorArchitecture="msil" type="win32" />
+  <application />
+  <entryPoint>
+    <assemblyIdentity name="Flyfish" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
+    <commandLine file="Flyfish.exe" parameters="" />
+  </entryPoint>
+  <trustInfo>
+    <security>
+      <applicationRequestMinimum>
+        <PermissionSet Unrestricted="true" ID="Custom" SameSite="site" />
+        <defaultAssemblyRequest permissionSetReference="Custom" />
+      </applicationRequestMinimum>
+      <requestedPrivileges xmlns="urn:schemas-microsoft-com:asm.v3">
+        <!--
+          UAC 清单选项
+          如果要更改 Windows 用户帐户控制级别，请用以下节点之一替换
+          requestedExecutionLevel 节点。
+
+        <requestedExecutionLevel  level="asInvoker" uiAccess="false" />
+        <requestedExecutionLevel  level="requireAdministrator" uiAccess="false" />
+        <requestedExecutionLevel  level="highestAvailable" uiAccess="false" />
+
+          如果要利用文件和注册表虚拟化提供
+          向后兼容性，请删除 requestedExecutionLevel 节点。
+    -->
+        <requestedExecutionLevel level="asInvoker" uiAccess="false" />
+      </requestedPrivileges>
+    </security>
+  </trustInfo>
+  <dependency>
+    <dependentOS>
+      <osVersionInfo>
+        <os majorVersion="5" minorVersion="1" buildNumber="2600" servicePackMajor="0" />
+      </osVersionInfo>
+    </dependentOS>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="Microsoft.Windows.CommonLanguageRuntime" version="4.0.30319.0" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Flyfish.exe" size="211368">
+      <assemblyIdentity name="Flyfish" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>SBZecymAt3vC/NZCcJa1w+DYCQjVmdvWVe8fMfteJYs=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="SharpDX.dll" size="274944">
+      <assemblyIdentity name="SharpDX" version="4.2.0.0" publicKeyToken="B4DCF0F35E5521F1" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>oK8lXqSwmozbmVuMb9EHXkbwmOI8I1HJdObe2bi2IM8=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="SharpDX.XInput.dll" size="13824">
+      <assemblyIdentity name="SharpDX.XInput" version="4.2.0.0" publicKeyToken="B4DCF0F35E5521F1" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>tICAQ9kfk/MTaa3l5AtdEBbFJ5VseGhgLQDlFILjTjM=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <file name="Flyfish.exe.config" size="187">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+      <dsig:DigestValue>+CM46OnHRrXZXNLMx7+U3V3iubiYL//d8hGOR13lDhU=</dsig:DigestValue>
+    </hash>
+  </file>
+<publisherIdentity name="CN=SIGMA\Sigma" issuerKeyHash="2e778c76634df15928da58fbafc5cfa924d19b3b" /><Signature Id="StrongNameSignature" xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha256" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" /><DigestValue>yAhuoNxZeyZPKludd5WMYxe1wjQeHX0Z9XNSgorjJLg=</DigestValue></Reference></SignedInfo><SignatureValue>COSZyQCeTrRbOnuAFni5j+QCA2K1XfPqtCO5aKGwIf1izKmT/pKj9bGaLq0cfls2LPoYEzKQD6aCkaBD/9XC/qRk4ANZQLqadNPZxdiKPhHTwFw0ulHRV4po9s7hltXibi4FgikE/UFZt3iSGV8XhBn5+PmIgqueCG/CYYGUZDE=</SignatureValue><KeyInfo Id="StrongNameKeyInfo"><KeyValue><RSAKeyValue><Modulus>1DweTQTKcJTS3f0JvjXbYUVROZ0l2fIMtIm9xej5UUlUvRXUC9tygWVclsRvFJmmJjlr4OswvwTppz1mdcTwIcwZ+d9vfvUgQAZxRCIsJGQg/+kDSzrgT4rdUgs60NuPVmN3hqYjCdxPPFE25Q/GkEYYQUNdHh68bYlG+MDGiok=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><msrel:RelData xmlns:msrel="http://schemas.microsoft.com/windows/rel/2005/reldata"><r:license xmlns:r="urn:mpeg:mpeg21:2003:01-REL-R-NS" xmlns:as="http://schemas.microsoft.com/windows/pki/2005/Authenticode"><r:grant><as:ManifestInformation Hash="b824e38a825273f5197d1d1e34c2b517638c95779d5b2a4f267b59dca06e08c8" Description="" Url=""><as:assemblyIdentity name="Flyfish.exe" version="1.0.0.5" publicKeyToken="a5e50b6257a8f203" language="neutral" processorArchitecture="msil" type="win32" /></as:ManifestInformation><as:SignedBy /><as:AuthenticodePublisher><as:X509SubjectName>CN=SIGMA\Sigma</as:X509SubjectName></as:AuthenticodePublisher></r:grant><r:issuer><Signature Id="AuthenticodeSignature" xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha256" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" /><DigestValue>CZqqyXjp+NdY9UI/RmDRDTs2ZrnllOYL3dK2FaaWdxY=</DigestValue></Reference></SignedInfo><SignatureValue>OqY3M6dWheXaHkKJrgV1xcRBFr0dlActeVi1O0VPE75W9lvvU9gsQ83Q0HKL+gZgWXvX59dIR93MHoZJh86PMKtUb5mctf9k9y9Cqr181lPjPa/RUfYN/OIwb11gy/l4W1U7njWgQ9VS1bTWK397rFzU7YwLKmnsIxaYILB66IQ=</SignatureValue><KeyInfo><KeyValue><RSAKeyValue><Modulus>1DweTQTKcJTS3f0JvjXbYUVROZ0l2fIMtIm9xej5UUlUvRXUC9tygWVclsRvFJmmJjlr4OswvwTppz1mdcTwIcwZ+d9vfvUgQAZxRCIsJGQg/+kDSzrgT4rdUgs60NuPVmN3hqYjCdxPPFE25Q/GkEYYQUNdHh68bYlG+MDGiok=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><X509Data><X509Certificate>MIIBxTCCAS6gAwIBAgIQOdrLatC677ZAmAgffra4YTANBgkqhkiG9w0BAQsFADAhMR8wHQYDVQQDHhYAUwBJAEcATQBBAFwAUwBpAGcAbQBhMB4XDTI1MDMxOTA3MjE1MVoXDTI2MDMxOTEzMjE1MVowITEfMB0GA1UEAx4WAFMASQBHAE0AQQBcAFMAaQBnAG0AYTCBnzANBgkqhkiG9w0BAQEFAAOBjQAwgYkCgYEA1DweTQTKcJTS3f0JvjXbYUVROZ0l2fIMtIm9xej5UUlUvRXUC9tygWVclsRvFJmmJjlr4OswvwTppz1mdcTwIcwZ+d9vfvUgQAZxRCIsJGQg/+kDSzrgT4rdUgs60NuPVmN3hqYjCdxPPFE25Q/GkEYYQUNdHh68bYlG+MDGiokCAwEAATANBgkqhkiG9w0BAQsFAAOBgQCo6CIKHukABzG+/2VOuRDgE1jVln3JjkBnLyJg5IHMKNlbLx8CyFwx1eyFzIb1zm0jCpx8XjrERD++o/i76PG4Mn6ANIkPAb61v0ab9qPmWje85aWUCHueq/2QVewfUeG17qgw89FNHXlVziIT/T8NH4IadjTd35OgRneqB+PYlQ==</X509Certificate></X509Data></KeyInfo></Signature></r:issuer></r:license></msrel:RelData></KeyInfo></Signature></asmv1:assembly>

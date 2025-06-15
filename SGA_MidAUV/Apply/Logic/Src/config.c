@@ -353,16 +353,16 @@ tagPWM_T PWM[] =
         .tGPIO.tGPIOInit.Pin	= GPIO_PIN_14,		/* IO映射 */
 		.tGPIO.tGPIOPort		= GPIOD,			/* IO组映射 */
 	},
-	[LS] =       //PD12 TIM4_CH1 左舵机
+	[LS] =       //PD12 TIM4_CH1 左舵机 初始为平舵 高电平时间1418 对应占空比7.09%
 	{
-		.fDuty					= 7.5,				/* 初始占空比（%） */
+		.fDuty					= 7.09,				/* 初始占空比（%） */
 		.ulFreq					= 50,				/* 频率（Hz） */
         .tGPIO.tGPIOInit.Pin	= GPIO_PIN_12,		/* IO映射 */
 		.tGPIO.tGPIOPort		= GPIOD,			/* IO组映射 */
 	},
-	[RS] =       //PE13 TIM1_CH3 右舵机
+	[RS] =       //PE13 TIM1_CH3 右舵机 初始为平舵 高电平时间1702 对应占空比8.51%
 	{
-		.fDuty					= 7.5,				/* 初始占空比（%） */
+		.fDuty					= 8.51,				/* 初始占空比（%） */
 		.ulFreq					= 50,				/* 频率（Hz） */
         .tGPIO.tGPIOInit.Pin	= GPIO_PIN_13,		/* IO映射 */
 		.tGPIO.tGPIOPort		= GPIOE,			/* IO组映射 */
@@ -390,7 +390,7 @@ tagPWM_T PWM[] =
 	},
 	[PWM_TEST_2] =       //PC9 TIM8_CH4 备用 测试
 	{
-		.fDuty					= 9,				/* 初始占空比（%） */
+		.fDuty					= 7.5,				/* 初始占空比（%） */
 		.ulFreq					= 50,				/* 频率（Hz） */
         .tGPIO.tGPIOInit.Pin	= GPIO_PIN_9,		/* IO映射 */
 		.tGPIO.tGPIOPort		= GPIOC,			/* IO组映射 */

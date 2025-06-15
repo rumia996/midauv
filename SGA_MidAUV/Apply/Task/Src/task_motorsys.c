@@ -29,7 +29,8 @@ float rudder_ang_right = 0;
 void Task_MotorSys_Init(void)
 {
 	Task_MotorSys_AllThruster_Stop();
-	Task_MotorSys_AllSteer_0Angle();
+	//Task_MotorSys_AllSteer_0Angle();
+	Task_MotorSys_AllRudder_Angle_Set(0);
 	Task_MotorSys_Manipulator_Close();
 	Drv_Delay_Ms(4000);//保持停止位4秒让电调初始化
 }
@@ -76,7 +77,7 @@ bool Task_MotorSys_Rudder_Angle_Set(uint8_t index ,float ang)
 
 /**
  * @brief 所有舵板角度设置
- * @param 舵板角度值 向上最大25°向下最大-15°
+ * @param 舵板角度值 向上最大22°向下最大-15°
  * @retval true/false
 */
 bool Task_MotorSys_AllRudder_Angle_Set(float ang)
@@ -109,7 +110,7 @@ float Task_MotorSys_GetRudder_Angle(uint8_t index)
 }
 
 /**
- * @brief 舵板角度增量变化 效果不太好，尽量别用
+ * @brief 舵板角度增量变化 
  * @param 舵机编号 左舵机LS 右舵机RS 宏定义在config.h
  * @param 增量值 不宜太小,至少在2°以上
  * @retval true/false
@@ -221,7 +222,7 @@ bool Task_MotorSys_AllSteer_0Angle(void)
 }
 
 /**
- * @brief 单个舵机角度增量变化
+ * @brief 单个舵机角度增量变化 效果不好,别用
  * @param 舵机编号 左舵机LS 右舵机RS 宏定义在config.h
  * @param 增量值 
  * @retval true/false
@@ -732,7 +733,6 @@ void Task_MotorSys_Thruster_Test()
 		Drv_Delay_Ms(2000);
 		
 		Task_MotorSys_AllThruster_Stop();
-		Drv_Delay_Ms(2000);
 //		
 //		//编组测试
 //		Task_MotorSys_AllThruster_Start(10);
@@ -821,8 +821,6 @@ void Task_MotorSys_Manipulator_Test()
 /*舵机测试*/
 void Task_MotorSys_Servos_Test()
 {
-	while(1)
-	{
 //		//左舵向上最大-55 对应右舵向上最大为70
 //		Task_MotorSys_Steer_Angle_Set(LS,-55);
 //		Task_MotorSys_Steer_Angle_Set(RS,+70);
@@ -871,19 +869,23 @@ void Task_MotorSys_Servos_Test()
 //			Task_MotorSys_AllRudder_Angle_Set(i);
 //			Drv_Delay_Ms(100);
 //		}
+
+		//增量式运动,较为精准,且两舵板同步
 		Task_MotorSys_Rudder_Angle_Set(LS,-15);
 		Task_MotorSys_Rudder_Angle_Set(RS,-15);
 		Drv_Delay_Ms(2000);	
 		while (rudder_ang_left<22)
 		{
-			Task_MotorSys_Rudder_Angle_Add(LS,0.5);
-			Task_MotorSys_Rudder_Angle_Add(RS,0.5);
+			Task_MotorSys_Rudder_Angle_Add(LS,1.5);
+			Task_MotorSys_Rudder_Angle_Add(RS,1.5);
 			Drv_Delay_Ms(100);
 		}
+		Task_MotorSys_Rudder_Angle_Set(LS,22);
+		Task_MotorSys_Rudder_Angle_Set(RS,22);
 		while (rudder_ang_left>-15)
 		{
-			Task_MotorSys_Rudder_Angle_Add(LS,-0.5);
-			Task_MotorSys_Rudder_Angle_Add(RS,-0.5);
+			Task_MotorSys_Rudder_Angle_Add(LS,-1.5);
+			Task_MotorSys_Rudder_Angle_Add(RS,-1.5);
 			Drv_Delay_Ms(100);
 		}		
 //		for (int8_t i=-15;i<22;i++)
@@ -899,13 +901,13 @@ void Task_MotorSys_Servos_Test()
 //			Drv_Delay_Ms(100);
 //		}		
 		
-	}
 }
 
 
 /*动力系统句柄*/
 void Task_MotorSys_Handle(void)
 {	
-	Task_MotorSys_Servos_Test();
+	//Task_MotorSys_Manipulator_Test();
 	//Task_MotorSys_Thruster_Test();
+	//Task_MotorSys_Servos_Test();	
 }

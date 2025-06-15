@@ -1,0 +1,17 @@
+C:\Users\Sigma\source\auv\Flyfish\Flyfish\bin\Debug\Flyfish.exe.config
+C:\Users\Sigma\source\auv\Flyfish\Flyfish\bin\Debug\Flyfish.exe
+C:\Users\Sigma\source\auv\Flyfish\Flyfish\bin\Debug\Flyfish.pdb
+C:\Users\Sigma\source\auv\Flyfish\Flyfish\obj\Debug\Flyfish.csproj.AssemblyReference.cache
+C:\Users\Sigma\source\auv\Flyfish\Flyfish\obj\Debug\Flyfish.Form1.resources
+C:\Users\Sigma\source\auv\Flyfish\Flyfish\obj\Debug\Flyfish.Properties.Resources.resources
+C:\Users\Sigma\source\auv\Flyfish\Flyfish\obj\Debug\Flyfish.csproj.GenerateResource.cache
+C:\Users\Sigma\source\auv\Flyfish\Flyfish\obj\Debug\Flyfish.csproj.CoreCompileInputs.cache
+C:\Users\Sigma\source\auv\Flyfish\Flyfish\obj\Debug\Flyfish.exe
+C:\Users\Sigma\source\auv\Flyfish\Flyfish\obj\Debug\Flyfish.pdb
+C:\Users\Sigma\source\auv\Flyfish\Flyfish\obj\Debug\Flyfish.csproj.SuggestedBindingRedirects.cache
+C:\Users\Sigma\source\auv\Flyfish\Flyfish\bin\Debug\SharpDX.dll
+C:\Users\Sigma\source\auv\Flyfish\Flyfish\bin\Debug\SharpDX.XInput.dll
+C:\Users\Sigma\source\auv\Flyfish\Flyfish\bin\Debug\SharpDX.pdb
+C:\Users\Sigma\source\auv\Flyfish\Flyfish\bin\Debug\SharpDX.XInput.pdb
+C:\Users\Sigma\source\auv\Flyfish\Flyfish\bin\Debug\SharpDX.XInput.xml
+C:\Users\Sigma\source\auv\Flyfish\Flyfish\obj\Debug\Flyfish.csproj.CopyComplete

@@ -117,7 +117,7 @@ void extract_char_between_indexandchar(const uint8_t *input, uint8_t *output, ui
     } else {
         output[0] = '\0'; // 解析失败返回空字符串
 		#ifdef DEBUG_MODE
-		printf("命令格式错误,cmd=%s\r\n",input);
+		printf("Command format error,cmd=%s\r\n",input);
 		#endif
     }
 }
@@ -151,7 +151,7 @@ bool MODE_Switch(uint8_t target_MODE)
 	if(target_MODE != DEFAULT_MODE && target_MODE != MANUAL_MODE && target_MODE != AUTO_MODE)
 	{
 		#ifdef DEBUG_MODE
-		printf("无法切换:未定义的模式 %d\r\n",target_MODE);
+		printf("Fail to switch mode:undefined mode %d\r\n",target_MODE);
 		#endif
 		return false;
 	}
@@ -175,20 +175,20 @@ bool MODE_Switch(uint8_t target_MODE)
 		if (target_MODE == DEFAULT_MODE)		
 		{
 			#ifdef DEBUG_MODE
-			printf("切换为默认模式\r\n");
+			printf("Switch to Default Mode\r\n");
 			#endif
 		}
 		else if (target_MODE == MANUAL_MODE)
 		{
 			rt_sem_release(ManualCmd_Sem);//释放信号量,重置手柄计时器
 			#ifdef DEBUG_MODE
-			printf("切换为手动模式\r\n");
+			printf("Switch to Manual Mode\r\n");
 			#endif
 		}
 		else if (target_MODE == AUTO_MODE)
 		{
 			#ifdef DEBUG_MODE
-			printf("切换为自动模式\r\n");
+			printf("Switch to Auto Mode\r\n");
 			#endif
 		}
 	}

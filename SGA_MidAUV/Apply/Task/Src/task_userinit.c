@@ -45,5 +45,9 @@ void Task_UserInit(void)
 	}
 	
 	Drv_IWDG_Init(&demoIWDG);//看门狗放最后初始化
+	
+	#ifdef DEBUG_MODE
+	printf("Initialize success\r\n");
+	#endif
 }
 

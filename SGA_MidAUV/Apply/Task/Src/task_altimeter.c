@@ -24,7 +24,7 @@ void Task_Altimeter_Handle(void)
 						Height = atof((const char*)heightbuf);//ASCII转数字
 						memcpy(&ReportDataBuffer[HEIGHT_BASE],&Height,FLOAT_SIZE);
 #ifdef DEBUG_MODE
-						printf("高度计原始数据:%s,转换数字:%f\r\n",Altimeter_ReceBuf,Height);
+						printf("altimeter convert data:%f,origin data:%s",Height,Altimeter_ReceBuf);
 //						for (int i=HEIGHT_BASE;i<HEIGHT_BASE+4;i++)
 //						{
 //							printf("%c",ReportDataBuffer[i]);

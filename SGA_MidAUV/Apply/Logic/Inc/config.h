@@ -13,10 +13,10 @@
 #define MANUAL_MODE 1
 #define AUTO_MODE 2
 
-	extern uint8_t MODE;
+extern uint8_t MODE;
 
-	/*继电器控制宏定义*/
-	#define POW_MAG 0		//磁力仪
+/*继电器控制宏定义*/
+#define POW_MAG 0		//磁力仪
 #define POW_TDM 1		//温深仪
 #define POW_HEIGHT 2	//高度计
 #define POW_LIGHT 3		//水下灯
