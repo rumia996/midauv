@@ -165,7 +165,6 @@ bool MODE_Switch(uint8_t target_MODE)
 		}
 		//ֹͣ
 		Task_MotorSys_AllThruster_Stop();
-		Task_MotorSys_AllSteer_0Angle();
 		Task_MotorSys_Manipulator_Close();
 		
 		//�л�ģʽ

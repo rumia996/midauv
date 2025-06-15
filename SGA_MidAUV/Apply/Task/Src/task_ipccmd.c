@@ -250,7 +250,8 @@ void Task_IPCcmd_Handle(void)
 											{
 												Task_MotorSys_Rudder_Angle_Add(index,ang);
 											}
-										}break;
+											break;
+										}
 										case 'S'://Ö¸¶¨½Ç¶È
 										{
 											if (ang<-15 || ang>22)
@@ -267,8 +268,9 @@ void Task_IPCcmd_Handle(void)
 											else
 											{
 												Task_MotorSys_Rudder_Angle_Set(index,ang);
-											}											
-										}break;
+											}	
+											break;											
+										}
 										default:
 											#ifdef DEBUG_MODE
 											printf("Invalid rudder command:%c\r\n",IPC_ReceBuf[3]);
