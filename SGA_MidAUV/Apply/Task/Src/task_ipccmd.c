@@ -216,36 +216,68 @@ void Task_IPCcmd_Handle(void)
 									}			
 									break;
 								}
-								case 'D'://舵机控制 增量式 增量暂定为2度 @MDP2$
+								case 'D'://舵机控制 增量/指定角度  @MDA2,-2$ @MDS3,20$
 								{
 									uint8_t index = 0;
-									int16_t ang = 0;//存储舵机角度增量
-									switch (IPC_ReceBuf[3])
-									{
-										case 'P':ang = 2;break;//增加角度 舵板向上
-										case 'M':ang = -2;break;//减小角度 舵板向下
-										default:
-											#ifdef DEBUG_MODE
-											printf("Invalid rudder command:%c\r\n",IPC_ReceBuf[3]);
-											#endif
-											return;
-									}
-									switch (IPC_ReceBuf[4])
+									int16_t ang = 0;//存储舵机角度增量/指定角度
+									bool bothrudder = 0;
+									switch (IPC_ReceBuf[4])//要操作的舵板
 									{
 										case '1':index = LS;break;
-										case '2':index = RS;break;									
+										case '2':index = RS;break;	
+										case '3':bothrudder = 1;break;
 										default:
 											#ifdef DEBUG_MODE	
 											printf("Invalid rudder number:%c\r\n",IPC_ReceBuf[4]);
 											#endif
 											return;
 									}
+									//提取角度值
+									uint8_t angcmd[10]={0};
+									extract_str_between_2char(IPC_ReceBuf,angcmd,',','$');
+									ang = atoi((const char *)angcmd);
+									
+									switch (IPC_ReceBuf[3])//判断工作模式并执行
+									{
+										case 'A'://增减角度
+										{
+											if(bothrudder)
+											{
+												Task_MotorSys_Rudder_Angle_Add(LS,ang);
+												Task_MotorSys_Rudder_Angle_Add(RS,ang);
+											}
+											else
+											{
+												Task_MotorSys_Rudder_Angle_Add(index,ang);
+											}
+										}break;
+										case 'S'://指定角度
+										{
+											if (ang<-15 || ang>22)
+											{
+												#ifdef DEBUG_MODE
+												printf("Invalid rudder angle value:%d\r\n",ang);
+												#endif	
+												return;
+											}
+											if(bothrudder)
+											{
+												Task_MotorSys_AllRudder_Angle_Set(ang);
+											}
+											else
+											{
+												Task_MotorSys_Rudder_Angle_Set(index,ang);
+											}											
+										}break;
+										default:
+											#ifdef DEBUG_MODE
+											printf("Invalid rudder command:%c\r\n",IPC_ReceBuf[3]);
+											#endif
+											return;
+									}
 									#ifdef DEBUG_MODE
-									printf("cmd=%s,ruddernumber=%c,angleadd=%d\r\n",IPC_ReceBuf,IPC_ReceBuf[4],ang);
+									printf("cmd=%s,ruddernumber=%c,angle=%d\r\n",IPC_ReceBuf,IPC_ReceBuf[4],ang);
 									#endif
-									//执行
-									Task_MotorSys_Rudder_Angle_Add(index,ang);
-									//Task_MotorSys_Steer_Angle_Add(index,ang);
 									break;
 								}
 								case 'M'://平动控制 @MMF12$
