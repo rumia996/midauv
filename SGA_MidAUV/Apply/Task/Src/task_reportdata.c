@@ -38,6 +38,7 @@ void Task_ReportData_Handle(void)
 		PWM_update();
 		CRC_update();
 		//逐字节输出,不输出末尾/0
+		if (MODE != MANUAL_MODE)	//手柄模式下不发报文,临时解决树莓派不能同时收发的问题
 		for (int i = 0;i < sizeof(ReportDataBuffer); i++){
 			printf("%c",ReportDataBuffer[i]);
 		}
