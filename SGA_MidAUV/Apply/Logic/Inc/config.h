@@ -7,7 +7,7 @@
 #include "dev_conf.h"
 
 
-#define DEBUG_MODE//DEBUG模式开关,注释此行关闭DEBUG
+//#define DEBUG_MODE//DEBUG模式开关,注释此行关闭DEBUG
 /*运行模式宏定义*/
 #define DEFAULT_MODE 0
 #define MANUAL_MODE 1
@@ -39,6 +39,7 @@ extern uint8_t MODE;
 #define PWM_TEST_1 9	//备用
 #define PWM_TEST_2 10	//备用
 #define PWM_TEST_3 11	//备用
+#define LSRS 12	//两个舵机同时
 
 /* 用户句柄声明包含区 */
 extern tagGPIO_T RS485Ctrl[];

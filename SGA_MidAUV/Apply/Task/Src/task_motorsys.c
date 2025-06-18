@@ -117,19 +117,26 @@ float Task_MotorSys_GetRudder_Angle(uint8_t index)
 */
 bool Task_MotorSys_Rudder_Angle_Add(uint8_t index,float ang)
 {
-	if (index == LS || index == RS)
+	if (index == LS || index == RS || index == LSRS)
 	{
 		//使用float全局变量存储增量变化,消除舍入误差
 		if (index == LS)
 		{
 			rudder_ang_left += ang;	
 			Task_MotorSys_Rudder_Angle_Set(index,rudder_ang_left);			
-		}
+		}else
 		if (index == RS)
 		{
 			rudder_ang_right += ang;	
 			Task_MotorSys_Rudder_Angle_Set(index,rudder_ang_right);				
-		}	
+		}else
+		if (index == LSRS)
+		{
+			rudder_ang_left += ang;
+			rudder_ang_right = rudder_ang_left;	//确保角度同步
+			Task_MotorSys_Rudder_Angle_Set(LS,rudder_ang_left);
+			Task_MotorSys_Rudder_Angle_Set(RS,rudder_ang_right);				
+		}
 		//↓误差大,会导致两个舵板不同步
 		//return Task_MotorSys_Rudder_Angle_Set(index,Task_MotorSys_GetRudder_Angle(index) + ang);
 		//保证两个舵板同步，但必须一起动，且不流畅

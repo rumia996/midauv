@@ -406,7 +406,6 @@ void Task_IPCcmd_Handle(void)
 							{
 								case '1':index = LS;break;
 								case '2':index = RS;break;	
-								case '3':bothrudder = 1;break;
 								default:
 									#ifdef DEBUG_MODE	
 									printf("Invalid rudder number:%c\r\n",IPC_ReceBuf[3]);
@@ -422,15 +421,7 @@ void Task_IPCcmd_Handle(void)
 							{
 								case 'A'://增减角度
 								{
-									if(bothrudder)
-									{
-										Task_MotorSys_Rudder_Angle_Add(LS,ang);
-										Task_MotorSys_Rudder_Angle_Add(RS,ang);
-									}
-									else
-									{
-										Task_MotorSys_Rudder_Angle_Add(index,ang);
-									}
+									Task_MotorSys_Rudder_Angle_Add(index,ang);
 									break;
 								}
 								case 'S'://指定角度
@@ -442,7 +433,7 @@ void Task_IPCcmd_Handle(void)
 										#endif	
 										return;
 									}
-									if(bothrudder)
+									if(index == LSRS)
 									{
 										Task_MotorSys_AllRudder_Angle_Set(ang);
 									}
@@ -651,7 +642,7 @@ void rudderctrl()
 	{
 		case '1':index = LS;break;
 		case '2':index = RS;break;	
-		case '3':bothrudder = 1;break;
+		case '3':index = LSRS;break;
 		default:
 			#ifdef DEBUG_MODE	
 			printf("Invalid rudder number:%c\r\n",IPC_ReceBuf[4]);
@@ -667,15 +658,7 @@ void rudderctrl()
 	{
 		case 'A'://增减角度
 		{
-			if(bothrudder)
-			{
-				Task_MotorSys_Rudder_Angle_Add(LS,ang);
-				Task_MotorSys_Rudder_Angle_Add(RS,ang);
-			}
-			else
-			{
-				Task_MotorSys_Rudder_Angle_Add(index,ang);
-			}
+			Task_MotorSys_Rudder_Angle_Add(index,ang);
 			break;
 		}
 		case 'S'://指定角度
@@ -687,7 +670,7 @@ void rudderctrl()
 				#endif	
 				return;
 			}
-			if(bothrudder)
+			if(index == LSRS)
 			{
 				Task_MotorSys_AllRudder_Angle_Set(ang);
 			}
