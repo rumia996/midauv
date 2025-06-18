@@ -30,6 +30,7 @@ extern rt_thread_t AD4111Thread_t;
 void extract_str_between_2char(const uint8_t *input, uint8_t *output, uint8_t startchr, uint8_t endchr);
 void extract_char_between_indexandchar(const uint8_t *input, uint8_t *output, uint8_t startindex, uint8_t endchr);
 bool MODE_Switch(uint8_t target_MODE);
+void ClearManualSem();
 
 void RS485_Send_On(void);
 void RS485_Receive_On(void);

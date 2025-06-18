@@ -162,10 +162,16 @@ bool MODE_Switch(uint8_t target_MODE)
 		if (MODE == AUTO_MODE)
 		{
 			AutoModeInfo_Init();
+			Task_MotorSys_AllThruster_Stop();
+			Task_MotorSys_Manipulator_Close();
+		}
+		if (MODE == MANUAL_MODE)
+		{
+			Task_MotorSys_AllThruster_Stop();
+			Task_MotorSys_Manipulator_Close();
 		}
 		//停止
-		Task_MotorSys_AllThruster_Stop();
-		Task_MotorSys_Manipulator_Close();
+
 		
 		//切换模式
 		MODE = target_MODE;
@@ -179,6 +185,7 @@ bool MODE_Switch(uint8_t target_MODE)
 		}
 		else if (target_MODE == MANUAL_MODE)
 		{
+			ClearManualSem();
 			rt_sem_release(ManualCmd_Sem);//释放信号量,重置手柄计时器
 			#ifdef DEBUG_MODE
 			printf("Switch to Manual Mode\r\n");
@@ -196,6 +203,7 @@ bool MODE_Switch(uint8_t target_MODE)
 	{
 		if (target_MODE == MANUAL_MODE)
 		{
+			//ClearManualSem();
 			rt_sem_release(ManualCmd_Sem);//释放信号量,重置手柄计时器
 		}
 	}
@@ -203,6 +211,11 @@ bool MODE_Switch(uint8_t target_MODE)
 	
 }
 
+void ClearManualSem()
+{
+    // 清空旧信号量
+    while (rt_sem_trytake(ManualCmd_Sem) == RT_EOK);
+}
 	
 
 
