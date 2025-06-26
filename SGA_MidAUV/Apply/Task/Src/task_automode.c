@@ -46,7 +46,8 @@ void Task_AutoMode_Process(AutoModeInfo *pAMInfo)
 	}
 	else if (pAMInfo->Auto_Horizontal_Mode == AUTO_SETYAW)
 	{
-		Task_MotorSys_SetYaw(pAMInfo->target_yaw);
+		//Task_MotorSys_SetYaw(pAMInfo->target_yaw);
+		Task_MototSys_SetYawAndMove(pAMInfo->target_yaw,pAMInfo->target_speed);
 	}
 	else
 	{

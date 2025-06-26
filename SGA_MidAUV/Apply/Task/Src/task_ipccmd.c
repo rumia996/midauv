@@ -401,7 +401,6 @@ void Task_IPCcmd_Handle(void)
 						{
 							uint8_t index = 0;
 							int16_t ang = 0;//存储舵机角度增量/指定角度
-							bool bothrudder = 0;
 							switch (IPC_ReceBuf[3])//要操作的舵板
 							{
 								case '1':index = LS;break;
@@ -526,8 +525,13 @@ void Task_IPCcmd_Handle(void)
 											AMInfo.Auto_Vertical_Mode = AUTO_SETHEIGHT;
 											Report_Z(reportflag);
 										}break;
-										case 'H':{	//定艏	@ZAH-20$
-											AMInfo.target_yaw = cmd;
+										case 'H':{	//定艏	@ZAH-20$ @ZAH-20,4$
+											uint8_t yawbuf[8];
+											uint8_t speedbuf[8];
+											extract_str_between_2char(IPC_ReceBuf,yawbuf,'H',',');
+											extract_str_between_2char(IPC_ReceBuf,speedbuf,',','$');
+											AMInfo.target_yaw = atoi((const char*)yawbuf);
+											AMInfo.target_speed = atoi((const char*)speedbuf);
 											AMInfo.Auto_Horizontal_Mode= AUTO_SETYAW;
 											Report_Z(reportflag);
 										}break;
@@ -637,7 +641,6 @@ void rudderctrl()
 {
 	uint8_t index = 0;
 	int16_t ang = 0;//存储舵机角度增量/指定角度
-	bool bothrudder = 0;
 	switch (IPC_ReceBuf[4])//要操作的舵板
 	{
 		case '1':index = LS;break;

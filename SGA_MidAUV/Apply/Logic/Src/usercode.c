@@ -69,6 +69,7 @@ void UserLogic_Code(void)
 	rt_thread_startup(AutoModeThread_t);		//自动线程
 	rt_thread_startup(HandleModeThread_t);		//手动线程
 	rt_thread_startup(AD4111Thread_t);			//磁力仪采集线程
+	
 }
 
 /*公用函数*/
@@ -159,16 +160,21 @@ bool MODE_Switch(uint8_t target_MODE)
 	{
 		//退出旧模式 后处理
 		//退出自动模式时,重置自动模式结构体
-		if (MODE == AUTO_MODE)
+		if (MODE == DEFAULT_MODE)
+		{
+			Task_MotorSys_AllThruster_Stop();
+		}
+		else if (MODE == AUTO_MODE)
 		{
 			AutoModeInfo_Init();
 			Task_MotorSys_AllThruster_Stop();
-			Task_MotorSys_Manipulator_Close();
+			//Task_MotorSys_Manipulator_Close();
 		}
-		if (MODE == MANUAL_MODE)
+		else if (MODE == MANUAL_MODE)
 		{
+			ClearManualSem();
 			Task_MotorSys_AllThruster_Stop();
-			Task_MotorSys_Manipulator_Close();
+			//Task_MotorSys_Manipulator_Close();
 		}
 		//停止
 
@@ -176,8 +182,8 @@ bool MODE_Switch(uint8_t target_MODE)
 		//切换模式
 		MODE = target_MODE;
 		
-		//进入新模式 前处理	
-		if (target_MODE == DEFAULT_MODE)		
+		//进入新模式 前处理
+		if (target_MODE == DEFAULT_MODE)
 		{
 			#ifdef DEBUG_MODE
 			printf("Switch to Default Mode\r\n");
@@ -203,7 +209,7 @@ bool MODE_Switch(uint8_t target_MODE)
 	{
 		if (target_MODE == MANUAL_MODE)
 		{
-			//ClearManualSem();
+			ClearManualSem();
 			rt_sem_release(ManualCmd_Sem);//释放信号量,重置手柄计时器
 		}
 	}

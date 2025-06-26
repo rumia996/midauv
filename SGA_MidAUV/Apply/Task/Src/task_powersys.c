@@ -165,7 +165,7 @@ void Task_PowerSys_Handle()
 		if(counter>= 30)
 		{			
 			counter = 0;
-			Power_Off(POW_UACM);
+			//Power_Off(POW_UACM);
 			#ifdef DEBUG_MODE
 			printf("当前深度:%.3f 声通机已关闭\r\n",*p_height);
 			#endif

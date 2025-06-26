@@ -353,16 +353,16 @@ tagPWM_T PWM[] =
         .tGPIO.tGPIOInit.Pin	= GPIO_PIN_14,		/* IO映射 */
 		.tGPIO.tGPIOPort		= GPIOD,			/* IO组映射 */
 	},
-	[LS] =       //PD12 TIM4_CH1 左舵机 初始为平舵 高电平时间1418 对应占空比7.09%
+	[LS] =       //PD12 TIM4_CH1 左舵机 初始为平舵 高电平时间1418 对应占空比7.09% 1354
 	{
-		.fDuty					= 7.09,				/* 初始占空比（%） */
+		.fDuty					= 6.77,				/* 初始占空比（%） */
 		.ulFreq					= 50,				/* 频率（Hz） */
         .tGPIO.tGPIOInit.Pin	= GPIO_PIN_12,		/* IO映射 */
 		.tGPIO.tGPIOPort		= GPIOD,			/* IO组映射 */
 	},
-	[RS] =       //PE13 TIM1_CH3 右舵机 初始为平舵 高电平时间1702 对应占空比8.51%
+	[RS] =       //PE13 TIM1_CH3 右舵机 初始为平舵 高电平时间1702 对应占空比8.51% 	//改,稍微降低右舵1686
 	{
-		.fDuty					= 8.51,				/* 初始占空比（%） */
+		.fDuty					= 8.43,				/* 初始占空比（%） */
 		.ulFreq					= 50,				/* 频率（Hz） */
         .tGPIO.tGPIOInit.Pin	= GPIO_PIN_13,		/* IO映射 */
 		.tGPIO.tGPIOPort		= GPIOE,			/* IO组映射 */
@@ -412,4 +412,23 @@ void CRC_Init()
     HAL_CRC_Init(&hcrc);
 }
 
+tagPID_T SetDepthPID = 
+{
+	.fKp = 0.8f,
+	.fKi = 0.25,
+	.fKd = 0.01,
+};
 
+tagPID_T SetDepthAndMovePID =
+{
+	.fKp = 0.8f,
+	.fKi = 0.25,
+	.fKd = 0.01,
+};
+
+tagPID_T SetYawAndMovePID = 
+{
+	.fKp = 0.8f,
+	.fKi = 0.25,
+	.fKd = 0.01,
+};

@@ -27,7 +27,8 @@ void Task_UserInit(void)
 	Power_Test();
 	//Power_AllOn();
 	TDmeter_Init();
-	
+	Algo_PID_Init(&SetDepthPID);
+	Algo_PID_Init(&SetYawAndMovePID);
 	
 	//Power_AllOff();
 	

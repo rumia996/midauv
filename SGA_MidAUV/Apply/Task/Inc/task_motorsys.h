@@ -25,30 +25,32 @@ bool Task_MotorSys_Thruster_SpeedSet(uint8_t index,uint16_t _highTime);
 bool Task_MotorSys_AllThruster_SpeedSet(uint16_t _highTime);
 
 int8_t Task_MotorSys_GetThrusterSpeed(uint8_t index);
-bool Task_MotorSys_Thruster_Start(uint8_t index,int8_t speed);
-bool Task_MotorSys_VerticalThruster_Start(int8_t speed);
-bool Task_MotorSys_MainThruster_Start(int8_t speed);
-bool Task_MotorSys_AllThruster_Start(int8_t speed);
+bool Task_MotorSys_Thruster_Start(uint8_t index,float speed);
+bool Task_MotorSys_VerticalThruster_Start(float speed);
+bool Task_MotorSys_MainThruster_Start(float speed);
+bool Task_MotorSys_AllThruster_Start(float speed);
 
 bool Task_MotorSys_Thruster_Stop(uint8_t index);
 bool Task_MotorSys_VerticalThruster_Stop(void);
 bool Task_MotorSys_MainThruster_Stop(void);
 bool Task_MotorSys_AllThruster_Stop(void);
 
-bool Task_MotorSys_GoForward(uint8_t speed);
-bool Task_MotorSys_GoBack(uint8_t speed);
-bool Task_MotorSys_Float(uint8_t speed);
-bool Task_MotorSys_Dive(uint8_t speed);
-bool Task_MotorSys_TurnLeft(uint8_t speed);
-bool Task_MotorSys_TurnRight(uint8_t speed);
-bool Task_MotorSys_LeanForward(uint8_t speed);
-bool Task_MotorSys_LeanBack(uint8_t speed);
-bool Task_MotorSys_LeanLeft(uint8_t speed);
-bool Task_MotorSys_LeanRight(uint8_t speed);
+bool Task_MotorSys_GoForward(float speed);
+bool Task_MotorSys_GoBack(float speed);
+bool Task_MotorSys_Float(float speed);
+bool Task_MotorSys_Dive(float speed);
+bool Task_MotorSys_TurnLeft(float speed);
+bool Task_MotorSys_TurnRight(float speed);
+bool Task_MotorSys_LeanForward(float speed);
+bool Task_MotorSys_LeanBack(float speed);
+bool Task_MotorSys_LeanLeft(float speed);
+bool Task_MotorSys_LeanRight(float speed);
 
 bool Task_MotorSys_SetDepth(float target_depth);
+bool Task_MotorSys_SetDepthAndMove(float target_depth);
 bool Task_MotorSys_SetHeight(float target_height);
 bool Task_MotorSys_SetYaw(float target_yaw);
+bool Task_MototSys_SetYawAndMove(float target_yaw, float speed);
 
 void Task_MotorSys_Manipulator_Test(void);
 void Task_MotorSys_Thruster_Test(void);

@@ -2,6 +2,7 @@
 #include "task_TDmeter.h"
 #include "task_altimeter.h"
 #include "task_JY901.h"
+
 #define STOP_PWM_HIGHTIME 1500
 #define THRUSTER_MAX_PWM_HIGHTIME 2000
 #define THRUSTER_MIN_PWM_HIGHTIME 1000
@@ -12,8 +13,8 @@
 #define SERVORS_ANGLE_RANGE 270
 #define SERVORS_DELTA (SERVORS_MAXANGLE_PWM_HIGHTIME-STOP_PWM_HIGHTIME) / (SERVORS_ANGLE_RANGE / 2.0f)
 #define SERVORS_0ANGLE_PWM_HIGHTIME 1500
-/*推进器高电平时间调整值，用于推力平衡 us*/
-#define LVT_DELTA 0
+/*推进器高电平时间调整值，用于推力微调平衡 us*/
+#define LVT_DELTA 0	//会导致SpeedSet为0档pwm不是1500,尽量不用这个参数调整,如果用这个需确保调整值足够小,0档下推进器不动
 #define RVT_DELTA 0
 #define BVT_DELTA 0
 #define LMT_DELTA 0
@@ -52,7 +53,7 @@ void Task_MotorSys_Init(void)
  * @brief 单个舵板角度设置 由于安装问题,即使两个舵机角度相同,舵板角度也不同,需要同步;
  * 经测试,以左舵为基准,右舵机角度 = -左舵机角度+15 时 两个舵板同步
  * @param 舵机编号 左舵机LS 右舵机RS 宏定义在config.h
- * @param 舵板角度值 向上最大22°向下最大-15°舵板角度 = -0.5 × 左舵机角度 - 5 ;左舵机角度 = -2*(舵板角度+5)
+ * @param 舵板角度值 向上最大22°向下最大-15°舵板角度 = -0.5 × 左舵机角度 - 5 ;左舵机角度 = -2*(舵板角度+5) 
  * @retval true/false
 */
 bool Task_MotorSys_Rudder_Angle_Set(uint8_t index ,float ang)
@@ -60,7 +61,7 @@ bool Task_MotorSys_Rudder_Angle_Set(uint8_t index ,float ang)
 	if (ang >= -15 && ang <= 22)
 	{
 		int16_t steer_ang = 0;
-		steer_ang = - 2.0f * (ang + 5);
+		steer_ang = - 2.0f * (ang + 8);
 		if (index == LS)
 		{
 			rudder_ang_left = ang;
@@ -69,7 +70,7 @@ bool Task_MotorSys_Rudder_Angle_Set(uint8_t index ,float ang)
 		if (index == RS)
 		{
 			rudder_ang_right = ang;
-			return Task_MotorSys_Steer_Angle_Set(RS, -steer_ang + 15);
+			return Task_MotorSys_Steer_Angle_Set(RS, -steer_ang + 5);	//修正右舵不齐
 		}	
 	}
 	return false;	
@@ -82,7 +83,7 @@ bool Task_MotorSys_Rudder_Angle_Set(uint8_t index ,float ang)
 */
 bool Task_MotorSys_AllRudder_Angle_Set(float ang)
 {
-	return Task_MotorSys_Rudder_Angle_Set(LS,ang) && Task_MotorSys_Rudder_Angle_Set(RS,ang);
+	return Task_MotorSys_Rudder_Angle_Set(LS,ang) && Task_MotorSys_Rudder_Angle_Set(RS,ang);	
 }
 
 /**
@@ -166,7 +167,8 @@ bool Task_MotorSys_Steer_Angle_Set(uint8_t index,float ang)
 	}
 	if (index == RS)
 	{
-		if (ang >= -5 && ang <= 70)
+		//if (ang >= -5 && ang <= 70)
+		if (ang >= -6 && ang <= 70)
 		{
 			uint16_t _highTime = (SERVORS_DELTA+ 0.7f) * ang + SERVORS_0ANGLE_PWM_HIGHTIME;//ang -135°~+135°0.7f是补偿值，通过测试舵机试出来。
 			Drv_PWM_HighLvTimeSet(&PWM[index], _highTime);		
@@ -336,7 +338,7 @@ bool Task_MotorSys_AllThruster_SpeedSet(uint16_t _highTime)
  * @param speed 速度档位 -12~+12共25档 负档位即推进器反转
  * @retval true/false
 */
-bool Task_MotorSys_Thruster_Start(uint8_t index,int8_t speed)
+bool Task_MotorSys_Thruster_Start(uint8_t index, float speed)
 {
 	if (speed > 12)
 	{
@@ -352,7 +354,7 @@ bool Task_MotorSys_Thruster_Start(uint8_t index,int8_t speed)
 
 int8_t Task_MotorSys_GetThrusterSpeed(uint8_t index)
 {
-	int8_t speed = 0;
+	float speed = 0;
 	uint16_t _highTime = Drv_PWM_ReadHighLvTime(&PWM[index]);
 	speed = round((_highTime - STOP_PWM_HIGHTIME)/((THRUSTER_MAX_PWM_HIGHTIME - STOP_PWM_HIGHTIME)/ 12.0));
 	return speed;
@@ -363,11 +365,11 @@ int8_t Task_MotorSys_GetThrusterSpeed(uint8_t index)
  * @param speed 速度档位 -12~+12共25档 负档位即推进器反转
  * @retval true/false
 */
-bool Task_MotorSys_VerticalThruster_Start(int8_t speed)
+bool Task_MotorSys_VerticalThruster_Start(float speed)
 {
 	/*垂推前后推力平衡;将前推进器降一档*/
-	int8_t front_speed = 0;
-	int8_t delta = 2;
+	float front_speed = 0;
+	float delta = 1 ;
 	if (speed > 0)
 	{
 		front_speed = speed - delta;
@@ -398,7 +400,7 @@ bool Task_MotorSys_VerticalThruster_Start(int8_t speed)
  * @param speed 速度档位 -12~+12共25档 负档位即推进器反转
  * @retval true/false
 */
-bool Task_MotorSys_MainThruster_Start(int8_t speed)
+bool Task_MotorSys_MainThruster_Start(float speed)
 {
 	return 	Task_MotorSys_Thruster_Start(LMT,speed)&&
 			Task_MotorSys_Thruster_Start(RMT,speed);
@@ -409,7 +411,7 @@ bool Task_MotorSys_MainThruster_Start(int8_t speed)
  * @param speed 速度档位 -12~+12共25档 负档位即推进器反转
  * @retval true/false
 */
-bool Task_MotorSys_AllThruster_Start(int8_t speed)
+bool Task_MotorSys_AllThruster_Start(float speed)
 {
 	if (speed > 12)
 	{
@@ -467,7 +469,7 @@ bool Task_MotorSys_AllThruster_Stop(void)
  * @param speed 速度档位 0~12共13档
  * @retval true/false
 */
-bool Task_MotorSys_GoForward(uint8_t speed)
+bool Task_MotorSys_GoForward(float speed)
 {
 	return Task_MotorSys_MainThruster_Start(speed);
 }
@@ -477,7 +479,7 @@ bool Task_MotorSys_GoForward(uint8_t speed)
  * @param speed 速度档位 0~12共13档
  * @retval true/false
 */
-bool Task_MotorSys_GoBack(uint8_t speed)
+bool Task_MotorSys_GoBack(float speed)
 {
 	return Task_MotorSys_MainThruster_Start(-speed);
 }
@@ -487,7 +489,7 @@ bool Task_MotorSys_GoBack(uint8_t speed)
  * @param speed 速度档位 0~12共13档
  * @retval true/false
 */
-bool Task_MotorSys_Float(uint8_t speed)
+bool Task_MotorSys_Float(float speed)
 {
 	return Task_MotorSys_VerticalThruster_Start(speed);
 }
@@ -497,7 +499,7 @@ bool Task_MotorSys_Float(uint8_t speed)
  * @param speed 速度档位 0~12共13档
  * @retval true/false
 */
-bool Task_MotorSys_Dive(uint8_t speed)
+bool Task_MotorSys_Dive(float speed)
 {
 	return Task_MotorSys_VerticalThruster_Start(-speed);
 }
@@ -507,10 +509,10 @@ bool Task_MotorSys_Dive(uint8_t speed)
  * @param speed 速度档位 0~12共13档
  * @retval true/false
 */
-bool Task_MotorSys_TurnLeft(uint8_t speed)
+bool Task_MotorSys_TurnLeft(float speed)
 {
 	/*平衡转速，将正转的推进器降一档*/
-	int8_t front_speed = speed - 2;
+	float front_speed = speed - 2;
 	if (front_speed < 0)
 	{
 		front_speed = 0;
@@ -524,10 +526,10 @@ bool Task_MotorSys_TurnLeft(uint8_t speed)
  * @param speed 速度档位 0~12共13档
  * @retval true/false
 */
-bool Task_MotorSys_TurnRight(uint8_t speed)
+bool Task_MotorSys_TurnRight(float speed)
 {
 	/*平衡转速，将正转的推进器降一档*/
-	int8_t front_speed = speed - 2;
+	float front_speed = speed - 2;
 	if (front_speed < 0)
 	{
 		front_speed = 0;
@@ -541,7 +543,7 @@ bool Task_MotorSys_TurnRight(uint8_t speed)
  * @param speed 速度档位 0~12共13档
  * @retval true/false
 */
-bool Task_MotorSys_LeanForward(uint8_t speed)
+bool Task_MotorSys_LeanForward(float speed)
 {
 	return 	Task_MotorSys_Thruster_Start(LVT,-speed)&&
 			Task_MotorSys_Thruster_Start(RVT,-speed)&&
@@ -553,7 +555,7 @@ bool Task_MotorSys_LeanForward(uint8_t speed)
  * @param speed 速度档位 0~12共13档
  * @retval true/false
 */
-bool Task_MotorSys_LeanBack(uint8_t speed)
+bool Task_MotorSys_LeanBack(float speed)
 {
 	return 	Task_MotorSys_Thruster_Start(LVT,speed)&&
 			Task_MotorSys_Thruster_Start(RVT,speed)&&
@@ -565,7 +567,7 @@ bool Task_MotorSys_LeanBack(uint8_t speed)
  * @param speed 速度档位 0~12共13档
  * @retval true/false
 */
-bool Task_MotorSys_LeanLeft(uint8_t speed)
+bool Task_MotorSys_LeanLeft(float speed)
 {
 	return 	Task_MotorSys_Thruster_Start(LVT,-speed)&&
 			Task_MotorSys_Thruster_Start(RVT,speed);
@@ -576,7 +578,7 @@ bool Task_MotorSys_LeanLeft(uint8_t speed)
  * @param speed 速度档位 0~12共13档
  * @retval true/false
 */
-bool Task_MotorSys_LeanRight(uint8_t speed)
+bool Task_MotorSys_LeanRight(float speed)
 {
 	return	Task_MotorSys_Thruster_Start(LVT,speed)&&
 			Task_MotorSys_Thruster_Start(RVT,-speed);
@@ -589,29 +591,91 @@ bool Task_MotorSys_LeanRight(uint8_t speed)
 */
 bool Task_MotorSys_SetDepth(float target_depth)
 {
-	/*距离预定深度2m以上，全速下潜*/
-	if (target_depth - *p_depth >= 2)
-	{
-		return	Task_MotorSys_Dive(10);		
-	}
-	else if(target_depth - *p_depth > 1)		/*2m~1m，半速下潜*/
-	{
-		return  Task_MotorSys_Dive(8);		
-	}
-	else if (target_depth - *p_depth > 0.5)	/*1m~0.5m，低速下潜*/
-	{
-		return  Task_MotorSys_Dive(6);
-	}
-	else if (target_depth - *p_depth <= 0.5 || target_depth - *p_depth >= -0.5)	/*0.5m~-0.5m，缓慢下潜,尝试维持深度*/
-	{
-		return  Task_MotorSys_Dive(5);	
-	}
-	else									/*当前深度大于目标深度0.5m，停止，用自身浮力上浮*/
-	{
-		return  Task_MotorSys_Dive(0);
-	}
+//	/*距离预定深度2m以上，全速下潜*/
+//	if (target_depth - *p_depth >= 2)
+//	{
+//		return	Task_MotorSys_Dive(10);		
+//	}
+//	else if(target_depth - *p_depth > 1)		/*2m~1m，半速下潜*/
+//	{
+//		return  Task_MotorSys_Dive(8);		
+//	}
+//	else if (target_depth - *p_depth > 0.5)	/*1m~0.5m，低速下潜*/
+//	{
+//		return  Task_MotorSys_Dive(6);
+//	}
+//	else if (target_depth - *p_depth <= 0.5 || target_depth - *p_depth >= -0.5)	/*0.5m~-0.5m，缓慢下潜,尝试维持深度*/
+//	{
+//		return  Task_MotorSys_Dive(5);	
+//	}
+//	else									/*当前深度大于目标深度0.5m，停止，用自身浮力上浮*/
+//	{
+//		return  Task_MotorSys_Dive(0);
+//	}
+	
+	//控制
+	//期望值 初始值
+	float ExpectValue = target_depth;
+	float CurrentValue = *p_depth;
+	
+	float output = Algo_PID_Calculate(&SetDepthPID, CurrentValue, ExpectValue) * 5;
+    
+    // 输出限制（根据您的电机系统调整）
+    if (output > 10.0f) output = 10.0f;  // 全速下潜
+    if (output < 0.0f)   output = 0.0f;   // 停止推进器
+    
+	//PID系数值
+	float PIDparameter[3] = {2, 0,0 };
+
+	//更新PID系数，默认与结构体中相同
+	Algo_PID_Update(&SetDepthPID,PIDparameter);
+    
+	Task_MotorSys_Dive(output);
+	
+	//舵板控制
+//	float output = Algo_PID_Calculate(&PID, CurrentValue, target_depth);
+//    
+//    // 将PID输出映射到舵角范围：7°为中性点，±范围动态调整
+//    float rudder_angle = 7.0f + output;  // 假设PID输出0对应7°（水平）
+//    
+//    // 发送舵角指令（底层已限制-15~22°）
+//    Task_MotorSys_AllRudder_Angle_Set(rudder_angle);
+//    
+//    // 调试输出（可选）
+//    printf("DepthErr=%.2fm, PIDOut=%.2f, Rudder=%.1f°\n", 
+//           target_depth - *current_depth, output, rudder_angle);
 }
 
+/**
+ * @brief AUV前进中定深,只动前2个垂推,当未达到深度时下潜
+ * @param target_depth目标深度 单位/米
+ * @retval true/false
+*/
+bool Task_MotorSys_SetDepthAndMove(float target_depth)
+{
+	float diff_depth = *p_depth - target_depth;
+	//float abs_diff = fabsf(diff_depth);
+	//int8_t sign = (diff_depth >= 0) ? 1 : -1;	//1上浮 -1下潜
+
+	float pidoutput = Algo_PID_Calculate(&SetDepthAndMovePID,*p_depth,target_depth);
+	
+    // 输出限制
+    if (pidoutput > 10.0f) pidoutput = 10.0f;
+	if (pidoutput < -10.0f) pidoutput = -10.0f;
+    //if (pidoutput < 4.0f)   pidoutput = 4.0f;	//维持auv深度的最小输出
+    
+	//PID系数值
+	float PIDparameter[3] = {2, 0,0 };
+
+	//更新PID系数，默认与结构体中相同
+	Algo_PID_Update(&SetDepthAndMovePID,PIDparameter);
+    
+	//const float DEPTH_TOLERANCE = 0.1f;	//误差0.1m内认为方向正确
+	
+	Task_MotorSys_Thruster_Start(LVT,pidoutput);
+	Task_MotorSys_Thruster_Start(RVT,pidoutput);
+
+}
 /**
  * @brief AUV定高
  * @param target_height目标深度 单位/米 高度计支持最大50m，最小0.5m；建议最小值1m
@@ -653,7 +717,7 @@ bool Task_MotorSys_SetHeight(float target_height)
 
 
 /**
- * @brief AUV定艏 让船头指向指定方位
+ * @brief AUV原地定艏 让船头指向指定方位 原地转向
  * @param target_yaw 目标方位 按手柄摇杆定义，0度为东，90度为北，180为西，-90度为南
  * @retval true/false 方向正确时返回true,否则返回false
 */
@@ -664,22 +728,7 @@ bool Task_MotorSys_SetYaw(float target_yaw)
 	if ((*p_yaw - cov_target_yaw >= 0)  && (*p_yaw - cov_target_yaw <= 180))
 	{
 		/*右转弯*/
-		if (*p_yaw-cov_target_yaw > 45)
-		{
-			Task_MotorSys_TurnRight(5);
-			return false;
-		}
-		else if (*p_yaw-cov_target_yaw > 30)
-		{
-			Task_MotorSys_TurnRight(5);
-			return false;
-		}
-		else if (*p_yaw-cov_target_yaw > 15)
-		{
-			Task_MotorSys_TurnRight(5);
-			return false;
-		}
-		else if (*p_yaw-cov_target_yaw > 5)
+		if (*p_yaw-cov_target_yaw > 5)
 		{
 			Task_MotorSys_TurnRight(5);
 			return false;
@@ -693,22 +742,7 @@ bool Task_MotorSys_SetYaw(float target_yaw)
 	else
 	{
 		/*左转弯*/
-		if (*p_yaw-cov_target_yaw < -45)
-		{
-			Task_MotorSys_TurnLeft(5);
-			return false;
-		}
-		else if (*p_yaw-cov_target_yaw < -30)
-		{
-			Task_MotorSys_TurnLeft(5);
-			return false;
-		}
-		else if (*p_yaw-cov_target_yaw < -15)
-		{
-			Task_MotorSys_TurnLeft(5);
-			return false;
-		}
-		else if (*p_yaw-cov_target_yaw < -5)
+		if (*p_yaw-cov_target_yaw < -5)
 		{
 			Task_MotorSys_TurnLeft(5);
 			return false;
@@ -723,6 +757,65 @@ bool Task_MotorSys_SetYaw(float target_yaw)
 }
 
 
+
+/**
+ * @brief AUV定艏航行 让船头指向指定方位 并前进
+ * @param target_yaw 目标方位 直接按传感器来
+ * @param speed 速度档位 0~12共13档
+ * @retval true/false 方向正确时返回true,否则返回false
+*/
+bool Task_MototSys_SetYawAndMove(float target_yaw,float speed)
+{
+	//float cov_target_yaw = transform_angle(target_yaw);
+	//Task_MotorSys_SetDepthAndMove(target_depth);	//结合前进定深
+	target_yaw = normalize_angle(target_yaw);
+	float diff_yaw = normalize_angle(*p_yaw - target_yaw);
+	float abs_diff = fabsf(diff_yaw);
+	int8_t sign = (diff_yaw >= 0) ? 1 : -1;	//1右转弯 -1左转弯
+
+	float pidoutput = Algo_PID_Calculate(&SetYawAndMovePID, 0.0f,abs_diff);
+    //float pidoutput = Algo_PID_Calculate(&SetYawAndMovePID, *p_yaw,target_yaw);
+	
+    // 输出限制
+    if (pidoutput > speed) pidoutput = speed;
+    if (pidoutput < 0.0f)   pidoutput = 0.0f;
+    
+	//PID系数值
+	float PIDparameter[3] = {2, 0,0 };
+
+	//更新PID系数，默认与结构体中相同
+	Algo_PID_Update(&SetYawAndMovePID,PIDparameter);
+    
+	/*将手柄摇杆定义的坐标系转换为传感器东北天坐标系*/
+
+//	float BaseForce = speed * 0.5;	//基准前进力,为了给转向力留出差速空间,乘比例系数
+//	float turnForce = pidoutput * 0.5;		//转向力	由pid得出
+	float BaseForce = speed * 0.5f;  // 基准前进力
+
+	// 转向力系数，速度越高越小，限制最低为0.2
+	float k = 1.0f - (BaseForce / 10.0f);
+	if (k < 0.2f) k = 0.2f;
+
+	float turnForce = pidoutput * k;  // 自适应转向力
+
+	/*p_yaw - cov_target_yaw 值用于判断转向 */
+
+	
+	//最大前进力10 最大转向力10,合成力=前进力±转向力 当前进力大于转向力时两个推进器都正转,当前进力等于转向力时有一个推进器正好停止,当前进力小于转向力时有一个推进器倒转
+	const float YAW_TOLERANCE = 1.0f;	//误差2度内认为方向正确
+	
+    if (abs_diff < YAW_TOLERANCE) {
+        // 方向正确，保持前进
+        Task_MotorSys_Thruster_Start(LMT, BaseForce);
+        Task_MotorSys_Thruster_Start(RMT, BaseForce);
+        return true;
+    } else {
+        // 调整方向
+        Task_MotorSys_Thruster_Start(LMT, BaseForce + sign * turnForce);
+        Task_MotorSys_Thruster_Start(RMT, BaseForce - sign * turnForce);
+        return true;
+    }
+}
 /*推进器测试*/
 void Task_MotorSys_Thruster_Test()
 {
@@ -925,4 +1018,7 @@ void Task_MotorSys_Handle(void)
 	//Task_MotorSys_Manipulator_Test();
 	//Task_MotorSys_Thruster_Test();
 	//Task_MotorSys_Servos_Test();	
+	//Task_MotorSys_SetDepth(1);
+	//Task_MototSys_SetYawAndMove(-9,6);
+	//Task_MotorSys_SetDepthAndMove(0);
 }

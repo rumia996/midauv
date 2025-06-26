@@ -59,6 +59,10 @@ extern tagUART_T Uart4;
 extern tagPWM_T PWM[];
 extern tagIWDG_T demoIWDG;
 
+extern tagPID_T SetDepthPID;
+extern tagPID_T SetDepthAndMovePID;
+extern tagPID_T SetYawAndMovePID;
+
 extern CRC_HandleTypeDef hcrc;
 void CRC_Init(void);
 void CRC_update(void);
